@@ -1,0 +1,745 @@
+#+TITLE: Orchestration kit
+#+SUBTITLE: with docker swarm mode 🐳
+#+DATE: 2017/02/08
+#+AUTHOR: vdemeester
+#+EMAIL: vdemeester@docker.com
+#+OPTIONS: ':nil *:t -:t ::t <:t H:3 \n:nil ^:t arch:headline
+#+OPTIONS: author:t c:nil creator:comment d:(not "LOGBOOK") date:t
+#+OPTIONS: e:t email:nil f:t inline:t num:nil p:nil pri:nil stat:t
+#+OPTIONS: tags:t tasks:t tex:t timestamp:t toc:nil todo:t |:t
+#+DESCRIPTION:
+#+EXCLUDE_TAGS: noexport
+#+KEYWORDS:
+#+LANGUAGE: en
+#+SELECT_TAGS: export
+
+#+COMPANY: Docker Inc.
+#+WWW: http://vincent.demeester.fr/
+#+GITHUB: http://github.com/vdemeester
+#+TWITTER: vdemeest
+
+#+FAVICON: images/favicon.png
+#+ICON: images/mobys.png
+#+HASHTAG: #docker #swarm #orchestration
+
+* /whoami
+
+  #+BEGIN_HTML
+  <span style="text-align: right;float:right; display: block; width: 50%;">Docker maintainer<br/>certified trainer<br><span style="font-size: 2em;">🐳</span></span>
+  #+END_HTML
+
+- I'm a developer, devops, craftsman — /I 💓 & work *@Docker*/
+- I 💓 GNU/Linux 🐧, Docker 🐳 & GNU/Emacs 🐪
+- I 💓 Free-software !
+- I 💓 *Go*, /Java/, Python and much more
+- And I 💓 unicode, 🚴 & 🚶
+
+* Plan
+
+  - Orchestration, wat ? why ?
+  - Your choice !
+  - Docker, wat ?
+  - Swarm, the old way, the new way…
+  - Demo, demo, demo
+
+* Orchestration 🕸
+  :PROPERTIES:
+  :SLIDE:    segue dark quote
+  :ASIDE:    right bottom
+  :ARTICLE:  flexbox vleft auto-fadein
+  :END:
+  Wat ? Why ?
+** Wat? Wikipedia™
+
+   #+BEGIN_QUOTE
+   an inherent intelligence or even implicitly autonomic control
+
+   […]
+
+   the effect of automation or systems deploying elements of control theory.
+   #+END_QUOTE
+
+   Orchestration happens on *cluster(s)*
+
+   #+BEGIN_QUOTE
+   a set of loosely or tightly connected computers that work together so
+   that, in many respects, they can be viewed as a single system.
+   #+END_QUOTE
+
+** Why?
+
+   Cluster
+
+   - Enhance availability
+   - Scale easily
+   - Distribute the load
+   - Manager resource easier
+
+   Orchestration
+
+   - Continuous deployement
+   - Efficiency
+   - Agility
+   - « You want to deploy, not to think how to deploy »
+
+** Features (1/2)
+
+   - placement
+   - scheduling
+   - deployment
+   - rules & constraints
+   - load-balancing
+   - update (rolling updates, …)
+
+** Features (2/2)
+
+   - self-healing (health-monitoring, re-schedule)
+   - discovery
+   - secure
+   - provisioning
+   - declarative (most of the time)
+
+* Your choice ! 🐣
+  :PROPERTIES:
+  :SLIDE:    segue dark quote
+  :ASIDE:    right bottom
+  :ARTICLE:  flexbox vleft auto-fadein
+  :END:
+
+  « Pour le meilleur et pour le pire » 💍
+
+** Existing tools
+
+  * Containers based
+    - *Swarm (docker)*
+    - Kubernetes (google)
+    - Rancher (rancher)
+    - Fleet (coreos)
+  * General purpose
+    * Nomad (hashicorp)
+    * Mesos (apache, mesosphere)
+    * Openstack (?) =o_O=
+  * O.V.N.I.
+    * Amazon web services
+    * Goggle cloud
+
+** Behind the scenes
+
+   - Service discovery
+     - etcd
+     - consul
+     - zookeeper
+   - Provisionning
+     - terraform (hashicorp)
+     - infrakit (docker)
+     - chef, puppet, ansible, saltstack
+   - Monitor
+     - prometheus
+
+* Docker 🐳
+  :PROPERTIES:
+  :SLIDE:    segue dark quote
+  :ASIDE:    right bottom
+  :ARTICLE:  flexbox vleft auto-fadein
+  :END:
+  If you live in a cave 👼
+** What is Docker ?
+
+   #+BEGIN_QUOTE
+   Docker is an open platform for developers and sysadmins to build,
+   ship, and run distributed applications.
+
+   -- docker.com
+   #+END_QUOTE
+
+   #+BEGIN_QUOTE
+   Docker is an open-source project that automates deployment of
+   applications inside softwark containers.
+
+   -- wikipedia.org
+   #+END_QUOTE
+
+   - Company: Docker Inc.
+   - Platform: dockerd (engine), docker (cli)
+   - Tools: compose, swarmkit, containerd
+** Metaphor
+:PROPERTIES:
+:FILL:     images/goldengate-containers.jpg
+:TITLE:    white
+:SLIDE:    white
+:ARTICLE:  large
+:END:
+
+Goods transportation with container
+
+** Architecture
+
+#+BEGIN_QUOTE
+Standing on the shoulders of giants
+#+END_QUOTE
+
+#+ATTR_HTML: :width 550px :style float: right;
+[[file:images/vm-vs-docker.png]]
+
+#+ATTR_HTML: :width 400px
+[[file:images/docker-isolation-small.png]]
+
+Quick note : /Repeat after me/ *Containers ARE NOT VMs !*
+
+** Main "notions"
+
+#+ATTR_HTML: :width 400px :style float: right;
+[[file:images/docker-filesystems-multilayer-small.png]]
+
+- Registry (/Distributing/)
+  - image depo
+- Images (/Building/)
+  - template
+  - read-only
+- Conteneurs (/Runtime/) :
+  - based on an image
+  - has a state
+
+** Show the code 😸
+
+#+BEGIN_SRC sh
+# Run an image…
+$ docker run -ti --rm ubuntu:14.04 /bin/bash
+# … or something more useful
+$ docker run -d -p 8080:8080 -p 80:8000 \
+         -v $PWD/traefik.toml:/traefik.toml \
+         emilevauge/traefik
+# … or totaly crazy
+$ docker run -d -v /tmp/.X11-unix:/tmp/.X11 \
+             -e DISPLAY=unix$DISPLAY \
+             # …
+             --name spotify vdemeester/spotify
+# What is running ?
+$ docker ps
+#+END_SRC
+
+#+BEGIN_CENTER
+*Démo 🙆*
+#+END_CENTER
+
+* Docker Swarm 🐝
+  :PROPERTIES:
+  :SLIDE:    segue dark quote
+  :ASIDE:    right bottom
+  :ARTICLE:  flexbox vleft auto-fadein
+  :END:
+  An horror story of naming 🐒
+
+** Small name confusion ?
+
+   #+BEGIN_QUOTE
+   A large number of insects, especially when in motion or (for bees)
+   migrating to a new colony.
+   #+END_QUOTE
+
+   Swarm is the /name/ of (almost) 2 projects @Docker:
+
+   - =docker/swarm=, i.e. Swarm v1
+   - *swarm mode* and the =docker/swarmkit= project
+
+   /These projects could have been named: pod, gam, herd (group of
+   whale 🐳), but it's another story 👼/
+
+** Swarm v1
+
+   #+BEGIN_QUOTE
+   Docker Swarm provides native clustering capabilities to turn a
+   group of Docker engines into a single, virtual Docker Engine.
+
+   -- docker.com
+   #+END_QUOTE
+
+   - Same Docker API, with pros and cons
+   - Required an external key/value store (etcd, consul, …)
+   - No /service model/ (scaling, updates, discovery,
+     load-balancing not built-in)
+   - Hard to setup (security, …)
+
+   Feedback aquired help understand limits and build better.
+
+** Swarm mode & =docker/swarmkit= (1/4)
+
+   #+BEGIN_QUOTE
+   A toolkit for orchestrating distributed systems at any scale. It
+   includes primitives for node discovery, raft-based consensus, task
+   scheduling and more.
+
+   -- github.com/docker/swarmkit
+   #+END_QUOTE
+
+   The *swarm mode* is the implementation of =docker/swarmkit= in the
+   =docker= engine, starting from *1.12*.
+
+   - Enhance the docker API, integrated with =docker=
+   - Not an external key/value store
+   - *Secure* by default (automatic TLS keying and signing)
+   - Easy to setup
+   * =docker/swarmkit= can work without =docker= (with different runtimes)
+
+** Swarm mode & =docker/swarmkit= (2/4)
+
+   - *Declarative service model*, *Scaling*
+   - *Desired state reconciliation*: constantly monitors the cluster
+     state and reconciles any differences between the actual state
+     your expressed desired state
+   - *Multi-host networking*
+   - *Service discovery*: each service have an entry in the swarm a
+     unique DNS name and load balances running containers
+   - *Load balancing*: You can expose the ports for services to an
+     external load balancer
+   - *Rolling updates*: At rollout time you can apply service updates
+     to nodes incrementally.
+   - …
+** Swarm mode & =docker/swarmkit= (3/4)
+
+   #+ATTR_HTML: :width 500px :style float: right;
+   [[file:images/swarm-mode.svg]]
+
+   - *Cluter*: at least one node
+   - *Nodes*: a docker engine instance
+     - managers: maintain the cluster state
+
+       one of them is elected as the *leader*
+     - workers: received and execute task that manager assigned them
+
+** Swarm mode & =docker/swarmkit= (4/4)
+
+   - *Services*: specified by its desired state, will create tasks
+     - desired state
+     - replicas, global, …
+   - *Tasks*:
+     - attached to a /worker/
+     - created fro a service
+     - corresponds to a specific container
+     - immutable, doesn't move, doesn't update
+   - *Stack* (client-side) : group of services (something like =docker-compose.yml=)
+
+* Demo 🌠
+  :PROPERTIES:
+  :SLIDE:    segue dark quote
+  :ASIDE:    right bottom
+  :ARTICLE:  flexbox vleft auto-fadein
+  :END:
+  Let's play 🎮
+
+** Setup 🏋
+
+   #+ATTR_HTML: :width 500px :style float: right
+   [[file:images/traefik.png]]
+
+   - Small cluster
+     - 3 managers
+     - 5 workers
+   - 1 cluster visualizer
+   - Træfik on manager(s)
+   - Monitoring tools (elk, …)
+   - Lot's of non useful apps 👼
+     - and a few useful ones 👼
+
+
+** Let's play 🎮
+
+   - 🗹 Creation d'un cluster 🏋
+   - ☐ Initialisation du swarm cluster
+   - ☐ Validation que celà fonctionne
+   - ☐ Création de services
+   - ☐ Rolling upgrade
+   - ☐ Update the cluster
+   - ☐ Health monitoring
+   - ☐ /put your game here…/
+
+
+* Questions ? 🐳
+  :PROPERTIES:
+  :SLIDE:    segue dark quote
+  :ASIDE:    right bottom
+  :ARTICLE:  flexbox vleft auto-fadein
+  :END:
+
+  #+ATTR_HTML: :width 500px :style float: right; margin-right: -3em;
+  [[file:images/animals-august2015.png]]
+
+  Thank You 🐸
+
+
+* Behind the scene 🎮
+  :PROPERTIES:
+  :SLIDE:    segue dark quote
+  :ASIDE:    right bottom
+  :ARTICLE:  flexbox vleft auto-fadein
+  :END:
+  The demo, at home 🏡
+
+** Cluster setup
+
+** Under the hood: docker swarm init
+
+   When we do docker swarm init:
+
+   - a keypair is created for the root CA of our Swarm
+   - a keypair is created for the first node
+   - a certificate is issued for this node
+   - the join tokens are created
+
+** Under the hood: join tokens
+
+   There is one token to join as a worker, and another to join as a manager.
+
+   The join tokens have two parts:
+   - a secret key (preventing unauthorized nodes from joining)
+   - a fingerprint of the root CA certificate (preventing MITM attacks)
+
+   If a token is compromised, it can be rotated instantly with:
+
+   #+BEGIN_SRC
+   docker swarm join-token --rotate <worker|manager>
+   #+END_SRC
+
+
+** Under the hood: docker swarm join
+
+   When a node joins the Swarm:
+
+   - it is issued its own keypair, signed by the root CA
+   - if the node is a manager:
+     - it joins the Raft consensus
+     - it connects to the current leader
+     - it accepts connections from worker nodes
+   - if the node is a worker:
+   - it connects to one of the managers (leader or follower)
+
+
+** IP address to advertise
+
+    - When running in Swarm mode, each node advertises its address to the others
+      (i.e. it tells them "you can contact me on 10.1.2.3:2377")
+    - If the node has only one IP address (other than 127.0.0.1), it is used automatically
+    - If the node has multiple IP addresses, you must specify which one to use
+      (Docker refuses to pick one randomly)
+    - You can specify an IP address or an interface name
+      (in the latter case, Docker will read the IP address of the interface and use it)
+    - You can also specify a port number
+      (otherwise, the default port 2377 will be used)
+
+** Join the cluster – gotchas
+
+   - *If your nodes have only one IP address, it's safe to let
+     autodetection do the job*
+
+     (Except if your instances have different private and public
+     addresses, e.g. on EC2, and you are building a Swarm involving
+     nodes inside and outside the private network: then you should
+     advertise the public address.)
+
+   - *If your nodes have multiple IP addresses, pick an address which
+     is reachable by every other node of the Swarm*
+
+** How many managers do we need?
+
+    - 2N+1 nodes can (and will) tolerate N failures
+      (you can have an even number of managers, but there is no point)
+    - 1 manager = no failure
+    - 3 managers = 1 failure
+    - 5 managers = 2 failures (or 1 failure during 1 maintenance)
+    - 7 managers and more = now you might be overdoing it a little bit
+
+** Running our first Swarm service
+
+   - Create a service featuring an Alpine container pinging Google resolvers:
+
+     #+BEGIN_SRC sh
+       docker service create alpine ping 8.8.8.8
+     #+END_SRC
+
+
+   - Check where the container was created:
+
+     #+BEGIN_SRC sh
+       docker service ps <serviceID>
+     #+END_SRC
+
+   - Check the logs
+
+     #+BEGIN_SRC sh
+       docker-machine ssh nodeX docker logs <containerID>
+       # experimental
+       docker service logs <serviceID>
+     #+END_SRC
+
+** Expose and update a service
+
+   Services can be exposed, with two special properties:
+   - the public port is available on every node of the Swarm,
+   - requests coming on the public port are load balanced across all instances.
+
+   #+BEGIN_SRC sh
+     docker service create --name hello --publish 80 emilevauge/whoami
+   #+END_SRC
+
+   Services can be updated using `service update` command (or
+   shortcuts like `service scale`)
+
+   #+BEGIN_SRC sh
+     docker service update --replicas=10 hello
+     # Same as
+     docker service scale hello=10
+   #+END_SRC
+
+** Tasks lifecycle
+
+    - If you are fast enough, you will be able to see multiple states:
+      - assigned (the task has been assigned to a specific node)
+      - preparing (right now, this mostly means "pulling the image")
+      - running
+    - When a task is terminated (stopped, killed...) it cannot be restarted
+      (A replacement task will be created)
+
+** Timeline of an upgrade
+
+   - SwarmKit will upgrade N instances at a time
+     (following the update-parallelism parameter)
+   - New tasks are created, and their desired state is set to Ready
+     (this pulls the image if necessary, ensures resource availability, creates the container ... without starting it)
+   - If the new tasks fail to get to Ready state, go back to the previous step
+     (SwarmKit will try again and again, until the situation is addressed or desired state is updated)
+   - When the new tasks are Ready, it sets the old tasks desired state
+     to Shutdown
+   - When the old tasks are Shutdown, it starts the new tasks
+   - Then it waits for the update-delay, and continues with the next batch of instances
+
+
+** Overlay network
+
+   - SwarmKit integrates with overlay networks, without requiring an extra key/value store
+   - Overlay networks are created the same way as before
+
+   #+BEGIN_SRC sh
+     docker network create --driver overlay demo-net
+     docker network ls
+     docker-machine ssh worker1 docker network ls
+   #+END_SRC
+
+   - Create multiple services and attaches them on services
+
+   #+BEGIN_SRC sh
+     docker service create --network demo-net --name whoami emilevauge/whoami
+     docker service create --network demo-net --name curlito nathanleclaire/curl sh -c \
+            "while true; do curl http://whoami/; sleep 2; done"
+   #+END_SRC
+
+** Securing overlay networks (1/2)
+
+    - By default, overlay networks are using plain VXLAN encapsulation
+      (~Ethernet over UDP, using SwarmKit's control plane for ARP resolution)
+    - Encryption can be enabled on a per-network basis
+      (It will use IPSEC encryption provided by the kernel, leveraging
+      hardware acceleration)
+    - This is only for the overlay driver
+      (Other drivers/plugins will use different mechanisms)
+
+
+
+   - Create networks
+
+     #+BEGIN_SRC sh
+       docker network create insecure --driver overlay --attachable
+       docker network create secure --opt encrypted --driver overlay --attachable
+     #+END_SRC
+
+** Securing overlay networks (2/2)
+
+
+   - Start a service in one node, and "sniff" network from another
+
+     #+BEGIN_SRC sh
+       docker service create --name whoami --network secure \
+              --network insecure --constraint node.hostname==node2 emilevauge/whoami
+       docker-machine ssh node2 docker run \
+                      --net host jpetazzo/netshoot ngrep -tpd eth0 HTTP
+     #+END_SRC
+
+   - From node2, run the following
+
+     #+BEGIN_SRC sh
+       docker run --rm --net insecure nicolaka/netshoot curl whoami
+       # should display an HTTP frame
+       docker run --rm --net secure nicolaka/netshoot curl web
+       # should only display #
+     #+END_SRC
+
+
+** Setup a registry (for this demo) (1/2)
+
+   - We need to run a registry:2 container
+     (make sure you specify tag :2 to run the new version!)
+   - It will store images and layers to the local filesystem
+     (but you can add a config file to use S3, Swift, etc.)
+   - Docker requires TLS when communicating with the registry
+     - unless for registries on localhost
+     - or with the Engine flag --insecure-registry
+   - Our strategy: publish the registry container on port 5000,
+     so that it's available through localhost:5000 on each node
+
+** Setup a registry (for this demo) (2/2)
+
+   - Create the registry service, publishing its port on the whole
+     cluster
+
+     #+BEGIN_SRC sh
+       docker service create --name registry --publish 5000:5000 registry:2
+     #+END_SRC
+
+   - Make sure it works on several nodes
+
+     #+BEGIN_SRC sh
+       docker-machine ssh manager1 curl localhost:5000/v2/_catalog
+       docker-machine ssh manager1 curl localhost:5000/v2/_catalog
+       # […]
+     #+END_SRC
+
+
+   - Make sure we have the busybox image, retag it and push it:
+
+     #+BEGIN_SRC sh
+       docker pull busybox
+       docker tag busybox localhost:5000/busybox
+       docker push localhost:5000/busybox
+     #+END_SRC
+
+** Secret management
+
+   - Docker has a "secret safe" (secure key→value store)
+   - You can create as many secrets as you like
+   - You can associate secrets to services
+   - Secrets are exposed as plain text files, but kept in memory only (using tmpfs)
+   - Secrets are immutable (at least in Engine 1.13)
+   - Secrets have a max size of 500 KB
+
+** Secrets in practice
+
+   - Can be (ab)used to hold whole configuration files if needed
+   - If you intend to rotate secret foo, call it foo.N instead, and map it to foo
+     (N can be a serial, a timestamp...)
+
+     #+BEGIN_SRC sh
+       docker service create --secret source=foo.N,target=foo ...
+     #+END_SRC
+
+   - You can update (remove+add) a secret in a single command:
+
+     #+BEGIN_SRC sh
+       docker service update ... --secret-rm foo.M --secret-add source=foo.N,target=foo
+     #+END_SRC
+
+
+** Local volumes vs. global volumes
+
+   - Global volumes exist in a single namespace
+   - A global volume can be mounted on any node
+     (bar some restrictions specific to the volume driver in use; e.g. using an EBS-backed volume on a GCE/EC2 mixed cluster)
+   - Attaching a global volume to a container allows to start the container anywhere
+     (and retain its data wherever you start it!)
+   - Global volumes require extra plugins (Flocker, Portworx...)
+   - Docker doesn't come with a default global volume driver at this point
+   - Therefore, we will fall back on local volumes (and use constraint
+     for our services)
+
+** An app on the swarm
+
+   - Build on our local node (node1)
+   - Tag images with a version number
+     (timestamp; git hash; semantic...)
+   - Upload them to a registry
+   - Create services using the images
+** Without stacks (1/3)
+
+   - We use =docker-compose= to test develop and run our application
+   - Let's build, tag and push our images
+
+     #+BEGIN_SRC sh
+       DOCKER_REGISTRY=localhost:5000
+       TAG=v0.1
+       for SERVICE in hasher rng webui worker; do
+           docker-compose build $SERVICE
+           docker tag dockercoins_$SERVICE $DOCKER_REGISTRY/dockercoins_$SERVICE:$TAG
+           docker push $DOCKER_REGISTRY/dockercoins_$SERVICE
+       done
+     #+END_SRC
+   - We'll create a network for our application
+
+     #+BEGIN_SRC sh
+       docker network create --driver overlay dockercoins
+     #+END_SRC
+
+** Without stacks (2/3)
+
+   - Let's create the services
+
+     #+BEGIN_SRC sh
+       DOCKER_REGISTRY=localhost:5000
+       TAG=v0.1
+       for SERVICE in hasher rng webui worker; do
+           docker service create --network dockercoins --name $SERVICE \
+                  $DOCKER_REGISTRY/dockercoins_$SERVICE:$TAG
+       done
+     #+END_SRC
+
+   - And validate it works by exposing the web ui
+
+     #+BEGIN_SRC sh
+       docker service update webui --publish-add 8000:80
+     #+END_SRC
+
+   - We can now scale part of our application, update it, …
+
+     #+BEGIN_SRC sh
+       docker service update --replicas 10 worker
+     #+END_SRC
+
+** Without stacks (3/3)
+
+   - To update we will update the image, push it and then call
+     =service update=. But first, let's update/define an upgrade
+     policy.
+
+     #+BEGIN_SRC sh
+       # Update task 2 by 2, separate by 5s
+       docker service update --update-paralellism 2 --update-delay 5s worker
+       # update
+       docker service update --image $DOCKER_REGISTRY/dockercoins_worker:v0.2
+     #+END_SRC
+
+     If something wrong happens, you can rollback
+
+     #+BEGIN_SRC sh
+       docker service update --image $DOCKER_REGISTRY/dockercoins_worker:v0.1
+       # Using docker >= 1.13
+       docker service update --rollback
+     #+END_SRC
+
+
+** With stacks
+
+   Building and pushing stack services
+
+   - We are going to use the build + image trick that we showed earlier:
+
+     #+BEGIN_SRC sh
+       docker-compose -f my_stack_file.yml build
+       docker-compose -f my_stack_file.yml push
+       docker stack deploy my_stack --compose-file my_stack_file.yml
+     #+END_SRC
+
+   - To update, update your compose file and re-deploy
+
+     #+BEGIN_SRC sh
+       # Do some changes, update the compose file
+       docker-compose -f my_stack_file.yml build
+       docker-compose -f my_stack_file push
+       docker stack deploy my_stack --compose-file my_stack_file.yml
+     #+END_SRC

@@ -1,0 +1,1770 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title></title>
+<!-- 2017-02-07 Tue 22:18 -->
+<meta  charset="utf-8" />
+<meta  htto-equiv="X-UA-Compatible" content="chrome=1" />
+<meta  name="generator" content="Org-mode with org-ioslide" />
+<meta  name="author" content="vdemeester" />
+
+
+<!--<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">-->
+<!--<meta name="viewport" content="width=device-width, initial-scale=1.0">-->
+<!--This one seems to work all the time, but really small on ipad-->
+<!--<meta name="viewport" content="initial-scale=0.4">-->
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<link rel="stylesheet" media="all" href="theme/css/default.css" />
+<link rel="stylesheet" media="only screen and (max-device-width: 480px)" href="theme/css/phone.css" />
+<link rel="stylesheet" media="all" href="theme/css/small-icon.css" />
+<base target="_blank"> <!-- This amazingness opens all links in a new tab. -->
+<script data-main="js/slides" src="js/require-1.0.8.min.js"></script>
+
+   <script src="js/jquery-1.7.1.min.js" type="text/javascript"></script>
+
+<script src="js/mathjax/MathJax.js?config=TeX-AMS-MML_HTMLorMML,local/local" type="text/javascript"></script>
+</head>
+<body style="opacity: 0">
+<slides class="layout-widescreen">
+<slide class="title-slide segue nobackground">
+       <aside class="gdbar"><img src="images/mobys.png"></aside>
+       <!-- The content of this hgroup is replaced programmatically through the slide_config.json. -->
+       <hgroup class="auto-fadein">
+         <h1 data-config-title><!-- populated from slide_config.json --></h1>
+         <h2 data-config-subtitle><!-- populated from slide_config.json --></h2>
+         <p data-config-presenter><!-- populated from slide_config.json --></p>
+       </hgroup>
+    </slide>
+  
+<slide id="sec-1"  >
+<hgroup class="">
+       <h2 class=" ">/whoami</h2>
+       <h3></h3>
+       </hgroup>
+<article class="" id="text-1">
+<span style="text-align: right;float:right; display: block; width: 50%;">Docker maintainer<br/>certified trainer<br><span style="font-size: 2em;">🐳</span></span>
+
+<ul>
+<li>I'm a developer, devops, craftsman — <i>I 💓 &amp; work <b>@Docker</b></i>
+</li>
+<li>I 💓 GNU/Linux 🐧, Docker 🐳 &amp; GNU/Emacs 🐪
+</li>
+<li>I 💓 Free-software !
+</li>
+<li>I 💓 <b>Go</b>, <i>Java</i>, Python and much more
+</li>
+<li>And I 💓 unicode, 🚴 &amp; 🚶
+</li>
+</ul>
+
+
+</article>
+
+</slide>
+
+</slide>
+<slide id="sec-2"  >
+<hgroup class="">
+       <h2 class=" ">Plan</h2>
+       <h3></h3>
+       </hgroup>
+<article class="" id="text-2">
+<ul>
+<li>Orchestration, wat ? why ?
+</li>
+<li>Your choice !
+</li>
+<li>Docker, wat ?
+</li>
+<li>Swarm, the old way, the new way…
+</li>
+<li>Demo, demo, demo
+</li>
+</ul>
+
+
+</article>
+
+</slide>
+
+</slide>
+<slide id="sec-3" class=" segue dark quote nobackground" style="background-image: url(nil)">
+<aside class="gdbar right bottom"><img src="images/mobys.png"></aside><hgroup class="">
+       <h2 class=" ">Orchestration 🕸</h2>
+       <h3></h3>
+       </hgroup>
+<article class="flexbox vleft auto-fadein" id="text-3">
+<p>
+Wat ? Why ?
+</p>
+
+
+</article>
+</slide>
+<slide id="sec-3-1"  >
+<hgroup class="">
+       <h2 class=" ">Wat? Wikipedia™</h2>
+       <h3></h3>
+       </hgroup>
+<article class="" id="text-3-1">
+<blockquote>
+<p>
+an inherent intelligence or even implicitly autonomic control
+</p>
+
+<p>
+[…]
+</p>
+
+<p>
+the effect of automation or systems deploying elements of control theory.
+</p>
+</blockquote>
+
+<p>
+Orchestration happens on <b>cluster(s)</b>
+</p>
+
+<blockquote>
+<p>
+a set of loosely or tightly connected computers that work together so
+that, in many respects, they can be viewed as a single system.
+</p>
+</blockquote>
+
+
+</article>
+
+</slide>
+
+</slide>
+<slide id="sec-3-2"  >
+<hgroup class="">
+       <h2 class=" ">Why?</h2>
+       <h3></h3>
+       </hgroup>
+<article class="" id="text-3-2">
+<p>
+Cluster
+</p>
+
+<ul>
+<li>Enhance availability
+</li>
+<li>Scale easily
+</li>
+<li>Distribute the load
+</li>
+<li>Manager resource easier
+</li>
+</ul>
+
+<p>
+Orchestration
+</p>
+
+<ul>
+<li>Continuous deployement
+</li>
+<li>Efficiency
+</li>
+<li>Agility
+</li>
+<li>« You want to deploy, not to think how to deploy »
+</li>
+</ul>
+
+
+</article>
+
+</slide>
+
+</slide>
+<slide id="sec-3-3"  >
+<hgroup class="">
+       <h2 class=" ">Features (1/2)</h2>
+       <h3></h3>
+       </hgroup>
+<article class="" id="text-3-3">
+<ul>
+<li>placement
+</li>
+<li>scheduling
+</li>
+<li>deployment
+</li>
+<li>rules &amp; constraints
+</li>
+<li>load-balancing
+</li>
+<li>update (rolling updates, …)
+</li>
+</ul>
+
+
+</article>
+
+</slide>
+
+</slide>
+<slide id="sec-3-4"  >
+<hgroup class="">
+       <h2 class=" ">Features (2/2)</h2>
+       <h3></h3>
+       </hgroup>
+<article class="" id="text-3-4">
+<ul>
+<li>self-healing (health-monitoring, re-schedule)
+</li>
+<li>discovery
+</li>
+<li>secure
+</li>
+<li>provisioning
+</li>
+<li>declarative (most of the time)
+</li>
+</ul>
+
+
+</article>
+
+</slide>
+
+</slide>
+
+</slide>
+<slide id="sec-4" class=" segue dark quote nobackground" style="background-image: url(nil)">
+<aside class="gdbar right bottom"><img src="images/mobys.png"></aside><hgroup class="">
+       <h2 class=" ">Your choice ! 🐣</h2>
+       <h3></h3>
+       </hgroup>
+<article class="flexbox vleft auto-fadein" id="text-4">
+
+<p>
+« Pour le meilleur et pour le pire » 💍
+</p>
+
+
+</article>
+
+</slide>
+<slide id="sec-4-1"  >
+<hgroup class="">
+       <h2 class=" ">Existing tools</h2>
+       <h3></h3>
+       </hgroup>
+<article class="" id="text-4-1">
+<ul>
+<li>Containers based
+<ul>
+<li><b>Swarm (docker)</b>
+</li>
+<li>Kubernetes (google)
+</li>
+<li>Rancher (rancher)
+</li>
+<li>Fleet (coreos)
+</li>
+</ul>
+</li>
+<li>General purpose
+<ul>
+<li>Nomad (hashicorp)
+</li>
+<li>Mesos (apache, mesosphere)
+</li>
+<li>Openstack (?) <code>o_O</code>
+</li>
+</ul>
+</li>
+<li>O.V.N.I.
+<ul>
+<li>Amazon web services
+</li>
+<li>Goggle cloud
+</li>
+</ul>
+</li>
+</ul>
+
+
+</article>
+
+</slide>
+
+</slide>
+<slide id="sec-4-2"  >
+<hgroup class="">
+       <h2 class=" ">Behind the scenes</h2>
+       <h3></h3>
+       </hgroup>
+<article class="" id="text-4-2">
+<ul>
+<li>Service discovery
+<ul>
+<li>etcd
+</li>
+<li>consul
+</li>
+<li>zookeeper
+</li>
+</ul>
+</li>
+<li>Provisionning
+<ul>
+<li>terraform (hashicorp)
+</li>
+<li>infrakit (docker)
+</li>
+<li>chef, puppet, ansible, saltstack
+</li>
+</ul>
+</li>
+<li>Monitor
+<ul>
+<li>prometheus
+</li>
+</ul>
+</li>
+</ul>
+
+
+</article>
+
+</slide>
+
+</slide>
+
+</slide>
+<slide id="sec-5" class=" segue dark quote nobackground" style="background-image: url(nil)">
+<aside class="gdbar right bottom"><img src="images/mobys.png"></aside><hgroup class="">
+       <h2 class=" ">Docker 🐳</h2>
+       <h3></h3>
+       </hgroup>
+<article class="flexbox vleft auto-fadein" id="text-5">
+<p>
+If you live in a cave 👼
+</p>
+
+
+</article>
+</slide>
+<slide id="sec-5-1"  >
+<hgroup class="">
+       <h2 class=" ">What is Docker ?</h2>
+       <h3></h3>
+       </hgroup>
+<article class="" id="text-5-1">
+<blockquote>
+<p>
+Docker is an open platform for developers and sysadmins to build,
+ship, and run distributed applications.
+</p>
+
+<p>
+<span class='float-right'>&#x2013; docker.com</span><br  />
+</p>
+</blockquote>
+
+<blockquote>
+<p>
+Docker is an open-source project that automates deployment of
+applications inside softwark containers.
+</p>
+
+<p>
+<span class='float-right'>&#x2013; wikipedia.org</span><br  />
+</p>
+</blockquote>
+
+<ul>
+<li>Company: Docker Inc.
+</li>
+<li>Platform: dockerd (engine), docker (cli)
+</li>
+<li>Tools: compose, swarmkit, containerd
+</li>
+</ul>
+
+
+</article>
+
+</slide>
+</slide>
+<slide id="sec-5-2" class="fill white nobackground" style="background-image: url(images/goldengate-containers.jpg)">
+<hgroup class="">
+       <h2 class="white ">Metaphor</h2>
+       <h3></h3>
+       </hgroup>
+<article class="large" id="text-5-2">
+
+<p>
+Goods transportation with container
+</p>
+
+
+</article>
+
+</slide>
+
+</slide>
+<slide id="sec-5-3"  >
+<hgroup class="">
+       <h2 class=" ">Architecture</h2>
+       <h3></h3>
+       </hgroup>
+<article class="" id="text-5-3">
+<blockquote>
+<p>
+Standing on the shoulders of giants
+</p>
+</blockquote>
+
+
+<div class="figure">
+<p><img src="images/vm-vs-docker.png" alt="vm-vs-docker.png" width="550px" style="float: right;" />
+</p>
+</div>
+
+
+<div class="figure">
+<p><img src="images/docker-isolation-small.png" alt="docker-isolation-small.png" width="400px" />
+</p>
+</div>
+
+<p>
+Quick note : <i>Repeat after me</i> <b>Containers ARE NOT VMs !</b>
+</p>
+
+
+</article>
+
+</slide>
+
+</slide>
+<slide id="sec-5-4"  >
+<hgroup class="">
+       <h2 class=" ">Main "notions"</h2>
+       <h3></h3>
+       </hgroup>
+<article class="" id="text-5-4">
+
+<div class="figure">
+<p><img src="images/docker-filesystems-multilayer-small.png" alt="docker-filesystems-multilayer-small.png" width="400px" style="float: right;" />
+</p>
+</div>
+
+<ul>
+<li>Registry (<i>Distributing</i>)
+<ul>
+<li>image depo
+</li>
+</ul>
+</li>
+<li>Images (<i>Building</i>)
+<ul>
+<li>template
+</li>
+<li>read-only
+</li>
+</ul>
+</li>
+<li>Conteneurs (<i>Runtime</i>) :
+<ul>
+<li>based on an image
+</li>
+<li>has a state
+</li>
+</ul>
+</li>
+</ul>
+
+
+</article>
+
+</slide>
+
+</slide>
+<slide id="sec-5-5"  >
+<hgroup class="">
+       <h2 class=" ">Show the code 😸</h2>
+       <h3></h3>
+       </hgroup>
+<article class="" id="text-5-5">
+<div class="org-src-container">
+
+<pre class="prettyprint" data-lang="sh">
+# Run an image…
+$ docker run -ti --rm ubuntu:14.04 /bin/bash
+# … or something more useful
+$ docker run -d -p 8080:8080 -p 80:8000 \
+	 -v $PWD/traefik.toml:/traefik.toml \
+	 emilevauge/traefik
+# … or totaly crazy
+$ docker run -d -v /tmp/.X11-unix:/tmp/.X11 \
+	     -e DISPLAY=unix$DISPLAY \
+	     # …
+	     --name spotify vdemeester/spotify
+# What is running ?
+$ docker ps
+</pre>
+
+</div>
+
+<article class="flexbox vcenter">
+<p>
+<b>Démo 🙆</b>
+</p>
+</article>
+
+
+</article>
+
+</slide>
+
+</slide>
+
+</slide>
+<slide id="sec-6" class=" segue dark quote nobackground" style="background-image: url(nil)">
+<aside class="gdbar right bottom"><img src="images/mobys.png"></aside><hgroup class="">
+       <h2 class=" ">Docker Swarm 🐝</h2>
+       <h3></h3>
+       </hgroup>
+<article class="flexbox vleft auto-fadein" id="text-6">
+<p>
+An horror story of naming 🐒
+</p>
+
+
+</article>
+
+</slide>
+<slide id="sec-6-1"  >
+<hgroup class="">
+       <h2 class=" ">Small name confusion ?</h2>
+       <h3></h3>
+       </hgroup>
+<article class="" id="text-6-1">
+<blockquote>
+<p>
+A large number of insects, especially when in motion or (for bees)
+migrating to a new colony.
+</p>
+</blockquote>
+
+<p>
+Swarm is the <i>name</i> of (almost) 2 projects @Docker:
+</p>
+
+<ul>
+<li><code>docker/swarm</code>, i.e. Swarm v1
+</li>
+<li><b>swarm mode</b> and the <code>docker/swarmkit</code> project
+</li>
+</ul>
+
+<p>
+<i>These projects could have been named: pod, gam, herd (group of
+whale 🐳), but it's another story 👼</i>
+</p>
+
+
+</article>
+
+</slide>
+
+</slide>
+<slide id="sec-6-2"  >
+<hgroup class="">
+       <h2 class=" ">Swarm v1</h2>
+       <h3></h3>
+       </hgroup>
+<article class="" id="text-6-2">
+<blockquote>
+<p>
+Docker Swarm provides native clustering capabilities to turn a
+group of Docker engines into a single, virtual Docker Engine.
+</p>
+
+<p>
+<span class='float-right'>&#x2013; docker.com</span><br  />
+</p>
+</blockquote>
+
+<ul>
+<li>Same Docker API, with pros and cons
+</li>
+<li>Required an external key/value store (etcd, consul, …)
+</li>
+<li>No <i>service model</i> (scaling, updates, discovery,
+load-balancing not built-in)
+</li>
+<li>Hard to setup (security, …)
+</li>
+</ul>
+
+<p>
+Feedback aquired help understand limits and build better.
+</p>
+
+
+</article>
+
+</slide>
+
+</slide>
+<slide id="sec-6-3"  >
+<hgroup class="">
+       <h2 class=" ">Swarm mode &amp; <code>docker/swarmkit</code> (1/4)</h2>
+       <h3></h3>
+       </hgroup>
+<article class="" id="text-6-3">
+<blockquote>
+<p>
+A toolkit for orchestrating distributed systems at any scale. It
+includes primitives for node discovery, raft-based consensus, task
+scheduling and more.
+</p>
+
+<p>
+<span class='float-right'>&#x2013; github.com/docker/swarmkit</span><br  />
+</p>
+</blockquote>
+
+<p>
+The <b>swarm mode</b> is the implementation of <code>docker/swarmkit</code> in the
+<code>docker</code> engine, starting from <b>1.12</b>.
+</p>
+
+<ul>
+<li>Enhance the docker API, integrated with <code>docker</code>
+</li>
+<li>Not an external key/value store
+</li>
+<li><b>Secure</b> by default (automatic TLS keying and signing)
+</li>
+<li>Easy to setup
+</li>
+<li><code>docker/swarmkit</code> can work without <code>docker</code> (with different runtimes)
+</li>
+</ul>
+
+
+</article>
+
+</slide>
+
+</slide>
+<slide id="sec-6-4"  >
+<hgroup class="">
+       <h2 class=" ">Swarm mode &amp; <code>docker/swarmkit</code> (2/4)</h2>
+       <h3></h3>
+       </hgroup>
+<article class="" id="text-6-4">
+<ul>
+<li><b>Declarative service model</b>, <b>Scaling</b>
+</li>
+<li><b>Desired state reconciliation</b>: constantly monitors the cluster
+state and reconciles any differences between the actual state
+your expressed desired state
+</li>
+<li><b>Multi-host networking</b>
+</li>
+<li><b>Service discovery</b>: each service have an entry in the swarm a
+unique DNS name and load balances running containers
+</li>
+<li><b>Load balancing</b>: You can expose the ports for services to an
+external load balancer
+</li>
+<li><b>Rolling updates</b>: At rollout time you can apply service updates
+to nodes incrementally.
+</li>
+<li>…
+</li>
+</ul>
+
+
+</article>
+
+</slide>
+</slide>
+<slide id="sec-6-5"  >
+<hgroup class="">
+       <h2 class=" ">Swarm mode &amp; <code>docker/swarmkit</code> (3/4)</h2>
+       <h3></h3>
+       </hgroup>
+<article class="" id="text-6-5">
+
+<div class="figure">
+<p><img src="images/swarm-mode.svg" alt="swarm-mode.svg" width="500px" style="float: right;" />
+</p>
+</div>
+
+<ul>
+<li><b>Cluter</b>: at least one node
+</li>
+<li><b>Nodes</b>: a docker engine instance
+<ul>
+<li>managers: maintain the cluster state
+
+<p>
+one of them is elected as the <b>leader</b>
+</p>
+</li>
+<li>workers: received and execute task that manager assigned them
+</li>
+</ul>
+</li>
+</ul>
+
+
+</article>
+
+</slide>
+
+</slide>
+<slide id="sec-6-6"  >
+<hgroup class="">
+       <h2 class=" ">Swarm mode &amp; <code>docker/swarmkit</code> (4/4)</h2>
+       <h3></h3>
+       </hgroup>
+<article class="" id="text-6-6">
+<ul>
+<li><b>Services</b>: specified by its desired state, will create tasks
+<ul>
+<li>desired state
+</li>
+<li>replicas, global, …
+</li>
+</ul>
+</li>
+<li><b>Tasks</b>:
+<ul>
+<li>attached to a <i>worker</i>
+</li>
+<li>created fro a service
+</li>
+<li>corresponds to a specific container
+</li>
+<li>immutable, doesn't move, doesn't update
+</li>
+</ul>
+</li>
+<li><b>Stack</b> (client-side) : group of services (something like <code>docker-compose.yml</code>)
+</li>
+</ul>
+
+
+</article>
+
+</slide>
+
+</slide>
+
+</slide>
+<slide id="sec-7" class=" segue dark quote nobackground" style="background-image: url(nil)">
+<aside class="gdbar right bottom"><img src="images/mobys.png"></aside><hgroup class="">
+       <h2 class=" ">Demo 🌠</h2>
+       <h3></h3>
+       </hgroup>
+<article class="flexbox vleft auto-fadein" id="text-7">
+<p>
+Let's play 🎮
+</p>
+
+
+</article>
+
+</slide>
+<slide id="sec-7-1"  >
+<hgroup class="">
+       <h2 class=" ">Setup 🏋</h2>
+       <h3></h3>
+       </hgroup>
+<article class="" id="text-7-1">
+
+<div class="figure">
+<p><img src="images/traefik.png" alt="traefik.png" width="500px" style="float: right" />
+</p>
+</div>
+
+<ul>
+<li>Small cluster
+<ul>
+<li>3 managers
+</li>
+<li>5 workers
+</li>
+</ul>
+</li>
+<li>1 cluster visualizer
+</li>
+<li>Træfik on manager(s)
+</li>
+<li>Monitoring tools (elk, …)
+</li>
+<li>Lot's of non useful apps 👼
+<ul>
+<li>and a few useful ones 👼
+</li>
+</ul>
+</li>
+</ul>
+
+
+</article>
+
+</slide>
+
+
+</slide>
+<slide id="sec-7-2"  >
+<hgroup class="">
+       <h2 class=" ">Let's play 🎮</h2>
+       <h3></h3>
+       </hgroup>
+<article class="" id="text-7-2">
+<ul>
+<li>🗹 Creation d'un cluster 🏋
+</li>
+<li>☐ Initialisation du swarm cluster
+</li>
+<li>☐ Validation que celà fonctionne
+</li>
+<li>☐ Création de services
+</li>
+<li>☐ Rolling upgrade
+</li>
+<li>☐ Update the cluster
+</li>
+<li>☐ Health monitoring
+</li>
+<li>☐ <i>put your game here…</i>
+</li>
+</ul>
+
+
+</article>
+
+</slide>
+
+</slide>
+
+
+</slide>
+<slide id="sec-8" class=" segue dark quote nobackground" style="background-image: url(nil)">
+<aside class="gdbar right bottom"><img src="images/mobys.png"></aside><hgroup class="">
+       <h2 class=" ">Questions ? 🐳</h2>
+       <h3></h3>
+       </hgroup>
+<article class="flexbox vleft auto-fadein" id="text-8">
+
+
+<div class="figure">
+<p><img src="images/animals-august2015.png" alt="animals-august2015.png" width="500px" style="float: right; margin-right: -3em;" />
+</p>
+</div>
+
+<p>
+Thank You 🐸
+</p>
+
+
+</article>
+
+</slide>
+
+
+</slide>
+<slide id="sec-9" class=" segue dark quote nobackground" style="background-image: url(nil)">
+<aside class="gdbar right bottom"><img src="images/mobys.png"></aside><hgroup class="">
+       <h2 class=" ">Behind the scene 🎮</h2>
+       <h3></h3>
+       </hgroup>
+<article class="flexbox vleft auto-fadein" id="text-9">
+<p>
+The demo, at home 🏡
+</p>
+
+
+</article>
+
+</slide>
+<slide id="sec-9-1"  >
+<hgroup class="">
+       <h2 class=" ">Cluster setup</h2>
+       <h3></h3>
+       </hgroup>
+
+</slide>
+
+</slide>
+<slide id="sec-9-2"  >
+<hgroup class="">
+       <h2 class=" ">Under the hood: docker swarm init</h2>
+       <h3></h3>
+       </hgroup>
+<article class="" id="text-9-2">
+<p>
+When we do docker swarm init:
+</p>
+
+<ul>
+<li>a keypair is created for the root CA of our Swarm
+</li>
+<li>a keypair is created for the first node
+</li>
+<li>a certificate is issued for this node
+</li>
+<li>the join tokens are created
+</li>
+</ul>
+
+
+</article>
+
+</slide>
+
+</slide>
+<slide id="sec-9-3"  >
+<hgroup class="">
+       <h2 class=" ">Under the hood: join tokens</h2>
+       <h3></h3>
+       </hgroup>
+<article class="" id="text-9-3">
+<p>
+There is one token to join as a worker, and another to join as a manager.
+</p>
+
+<p>
+The join tokens have two parts:
+</p>
+<ul>
+<li>a secret key (preventing unauthorized nodes from joining)
+</li>
+<li>a fingerprint of the root CA certificate (preventing MITM attacks)
+</li>
+</ul>
+
+<p>
+If a token is compromised, it can be rotated instantly with:
+</p>
+
+<pre class="example">
+docker swarm join-token --rotate &lt;worker|manager&gt;
+</pre>
+
+
+</article>
+
+</slide>
+
+
+</slide>
+<slide id="sec-9-4"  >
+<hgroup class="">
+       <h2 class=" ">Under the hood: docker swarm join</h2>
+       <h3></h3>
+       </hgroup>
+<article class="" id="text-9-4">
+<p>
+When a node joins the Swarm:
+</p>
+
+<ul>
+<li>it is issued its own keypair, signed by the root CA
+</li>
+<li>if the node is a manager:
+<ul>
+<li>it joins the Raft consensus
+</li>
+<li>it connects to the current leader
+</li>
+<li>it accepts connections from worker nodes
+</li>
+</ul>
+</li>
+<li>if the node is a worker:
+</li>
+<li>it connects to one of the managers (leader or follower)
+</li>
+</ul>
+
+
+</article>
+
+</slide>
+
+
+</slide>
+<slide id="sec-9-5"  >
+<hgroup class="">
+       <h2 class=" ">IP address to advertise</h2>
+       <h3></h3>
+       </hgroup>
+<article class="" id="text-9-5">
+<ul>
+<li>When running in Swarm mode, each node advertises its address to the others
+(i.e. it tells them "you can contact me on 10.1.2.3:2377")
+</li>
+<li>If the node has only one IP address (other than 127.0.0.1), it is used automatically
+</li>
+<li>If the node has multiple IP addresses, you must specify which one to use
+(Docker refuses to pick one randomly)
+</li>
+<li>You can specify an IP address or an interface name
+(in the latter case, Docker will read the IP address of the interface and use it)
+</li>
+<li>You can also specify a port number
+(otherwise, the default port 2377 will be used)
+</li>
+</ul>
+
+
+</article>
+
+</slide>
+
+</slide>
+<slide id="sec-9-6"  >
+<hgroup class="">
+       <h2 class=" ">Join the cluster – gotchas</h2>
+       <h3></h3>
+       </hgroup>
+<article class="" id="text-9-6">
+<ul>
+<li><b>If your nodes have only one IP address, it's safe to let
+autodetection do the job</b>
+
+<p>
+(Except if your instances have different private and public
+addresses, e.g. on EC2, and you are building a Swarm involving
+nodes inside and outside the private network: then you should
+advertise the public address.)
+</p>
+</li>
+
+<li><b>If your nodes have multiple IP addresses, pick an address which
+is reachable by every other node of the Swarm</b>
+</li>
+</ul>
+
+
+</article>
+
+</slide>
+
+</slide>
+<slide id="sec-9-7"  >
+<hgroup class="">
+       <h2 class=" ">How many managers do we need?</h2>
+       <h3></h3>
+       </hgroup>
+<article class="" id="text-9-7">
+<ul>
+<li>2N+1 nodes can (and will) tolerate N failures
+(you can have an even number of managers, but there is no point)
+</li>
+<li>1 manager = no failure
+</li>
+<li>3 managers = 1 failure
+</li>
+<li>5 managers = 2 failures (or 1 failure during 1 maintenance)
+</li>
+<li>7 managers and more = now you might be overdoing it a little bit
+</li>
+</ul>
+
+
+</article>
+
+</slide>
+
+</slide>
+<slide id="sec-9-8"  >
+<hgroup class="">
+       <h2 class=" ">Running our first Swarm service</h2>
+       <h3></h3>
+       </hgroup>
+<article class="" id="text-9-8">
+<ul>
+<li>Create a service featuring an Alpine container pinging Google resolvers:
+
+<div class="org-src-container">
+
+<pre class="prettyprint" data-lang="sh">
+docker service create alpine ping 8.8.8.8
+</pre>
+
+</div>
+</li>
+</ul>
+
+
+<ul>
+<li>Check where the container was created:
+
+<div class="org-src-container">
+
+<pre class="prettyprint" data-lang="sh">
+docker service ps &lt;serviceID&gt;
+</pre>
+
+</div>
+</li>
+
+<li>Check the logs
+
+<div class="org-src-container">
+
+<pre class="prettyprint" data-lang="sh">
+docker-machine ssh nodeX docker logs &lt;containerID&gt;
+# experimental
+docker service logs &lt;serviceID&gt;
+</pre>
+
+</div>
+</li>
+</ul>
+
+
+</article>
+
+</slide>
+
+</slide>
+<slide id="sec-9-9"  >
+<hgroup class="">
+       <h2 class=" ">Expose and update a service</h2>
+       <h3></h3>
+       </hgroup>
+<article class="" id="text-9-9">
+<p>
+Services can be exposed, with two special properties:
+</p>
+<ul>
+<li>the public port is available on every node of the Swarm,
+</li>
+<li>requests coming on the public port are load balanced across all instances.
+</li>
+</ul>
+
+<div class="org-src-container">
+
+<pre class="prettyprint" data-lang="sh">
+docker service create --name hello --publish 80 emilevauge/whoami
+</pre>
+
+</div>
+
+<p>
+Services can be updated using `service update` command (or
+shortcuts like `service scale`)
+</p>
+
+<div class="org-src-container">
+
+<pre class="prettyprint" data-lang="sh">
+docker service update --replicas=10 hello
+# Same as
+docker service scale hello=10
+</pre>
+
+</div>
+
+
+</article>
+
+</slide>
+
+</slide>
+<slide id="sec-9-10"  >
+<hgroup class="">
+       <h2 class=" ">Tasks lifecycle</h2>
+       <h3></h3>
+       </hgroup>
+<article class="" id="text-9-10">
+<ul>
+<li>If you are fast enough, you will be able to see multiple states:
+<ul>
+<li>assigned (the task has been assigned to a specific node)
+</li>
+<li>preparing (right now, this mostly means "pulling the image")
+</li>
+<li>running
+</li>
+</ul>
+</li>
+<li>When a task is terminated (stopped, killed&#x2026;) it cannot be restarted
+(A replacement task will be created)
+</li>
+</ul>
+
+
+</article>
+
+</slide>
+
+</slide>
+<slide id="sec-9-11"  >
+<hgroup class="">
+       <h2 class=" ">Timeline of an upgrade</h2>
+       <h3></h3>
+       </hgroup>
+<article class="" id="text-9-11">
+<ul>
+<li>SwarmKit will upgrade N instances at a time
+(following the update-parallelism parameter)
+</li>
+<li>New tasks are created, and their desired state is set to Ready
+(this pulls the image if necessary, ensures resource availability, creates the container &#x2026; without starting it)
+</li>
+<li>If the new tasks fail to get to Ready state, go back to the previous step
+(SwarmKit will try again and again, until the situation is addressed or desired state is updated)
+</li>
+<li>When the new tasks are Ready, it sets the old tasks desired state
+to Shutdown
+</li>
+<li>When the old tasks are Shutdown, it starts the new tasks
+</li>
+<li>Then it waits for the update-delay, and continues with the next batch of instances
+</li>
+</ul>
+
+
+</article>
+
+</slide>
+
+
+</slide>
+<slide id="sec-9-12"  >
+<hgroup class="">
+       <h2 class=" ">Overlay network</h2>
+       <h3></h3>
+       </hgroup>
+<article class="" id="text-9-12">
+<ul>
+<li>SwarmKit integrates with overlay networks, without requiring an extra key/value store
+</li>
+<li>Overlay networks are created the same way as before
+</li>
+</ul>
+
+<div class="org-src-container">
+
+<pre class="prettyprint" data-lang="sh">
+docker network create --driver overlay demo-net
+docker network ls
+docker-machine ssh worker1 docker network ls
+</pre>
+
+</div>
+
+<ul>
+<li>Create multiple services and attaches them on services
+</li>
+</ul>
+
+<div class="org-src-container">
+
+<pre class="prettyprint" data-lang="sh">
+docker service create --network demo-net --name whoami emilevauge/whoami
+docker service create --network demo-net --name curlito nathanleclaire/curl sh -c \
+       "while true; do curl http://whoami/; sleep 2; done"
+</pre>
+
+</div>
+
+
+</article>
+
+</slide>
+
+</slide>
+<slide id="sec-9-13"  >
+<hgroup class="">
+       <h2 class=" ">Securing overlay networks (1/2)</h2>
+       <h3></h3>
+       </hgroup>
+<article class="" id="text-9-13">
+<ul>
+<li>By default, overlay networks are using plain VXLAN encapsulation
+(~Ethernet over UDP, using SwarmKit's control plane for ARP resolution)
+</li>
+<li>Encryption can be enabled on a per-network basis
+(It will use IPSEC encryption provided by the kernel, leveraging
+hardware acceleration)
+</li>
+<li>This is only for the overlay driver
+(Other drivers/plugins will use different mechanisms)
+</li>
+</ul>
+
+
+
+<ul>
+<li>Create networks
+
+<div class="org-src-container">
+
+<pre class="prettyprint" data-lang="sh">
+docker network create insecure --driver overlay --attachable
+docker network create secure --opt encrypted --driver overlay --attachable
+</pre>
+
+</div>
+</li>
+</ul>
+
+
+</article>
+
+</slide>
+
+</slide>
+<slide id="sec-9-14"  >
+<hgroup class="">
+       <h2 class=" ">Securing overlay networks (2/2)</h2>
+       <h3></h3>
+       </hgroup>
+<article class="" id="text-9-14">
+<ul>
+<li>Start a service in one node, and "sniff" network from another
+
+<div class="org-src-container">
+
+<pre class="prettyprint" data-lang="sh">
+docker service create --name whoami --network secure \
+       --network insecure --constraint node.hostname==node2 emilevauge/whoami
+docker-machine ssh node2 docker run \
+	       --net host jpetazzo/netshoot ngrep -tpd eth0 HTTP
+</pre>
+
+</div>
+</li>
+
+<li>From node2, run the following
+
+<div class="org-src-container">
+
+<pre class="prettyprint" data-lang="sh">
+docker run --rm --net insecure nicolaka/netshoot curl whoami
+# should display an HTTP frame
+docker run --rm --net secure nicolaka/netshoot curl web
+# should only display #
+</pre>
+
+</div>
+</li>
+</ul>
+
+
+</article>
+
+</slide>
+
+
+</slide>
+<slide id="sec-9-15"  >
+<hgroup class="">
+       <h2 class=" ">Setup a registry (for this demo) (1/2)</h2>
+       <h3></h3>
+       </hgroup>
+<article class="" id="text-9-15">
+<ul>
+<li>We need to run a registry:2 container
+(make sure you specify tag :2 to run the new version!)
+</li>
+<li>It will store images and layers to the local filesystem
+(but you can add a config file to use S3, Swift, etc.)
+</li>
+<li>Docker requires TLS when communicating with the registry
+<ul>
+<li>unless for registries on localhost
+</li>
+<li>or with the Engine flag &#x2013;insecure-registry
+</li>
+</ul>
+</li>
+<li>Our strategy: publish the registry container on port 5000,
+so that it's available through localhost:5000 on each node
+</li>
+</ul>
+
+
+</article>
+
+</slide>
+
+</slide>
+<slide id="sec-9-16"  >
+<hgroup class="">
+       <h2 class=" ">Setup a registry (for this demo) (2/2)</h2>
+       <h3></h3>
+       </hgroup>
+<article class="" id="text-9-16">
+<ul>
+<li>Create the registry service, publishing its port on the whole
+cluster
+
+<div class="org-src-container">
+
+<pre class="prettyprint" data-lang="sh">
+docker service create --name registry --publish 5000:5000 registry:2
+</pre>
+
+</div>
+</li>
+
+<li>Make sure it works on several nodes
+
+<div class="org-src-container">
+
+<pre class="prettyprint" data-lang="sh">
+docker-machine ssh manager1 curl localhost:5000/v2/_catalog
+docker-machine ssh manager1 curl localhost:5000/v2/_catalog
+# […]
+</pre>
+
+</div>
+</li>
+</ul>
+
+
+<ul>
+<li>Make sure we have the busybox image, retag it and push it:
+
+<div class="org-src-container">
+
+<pre class="prettyprint" data-lang="sh">
+docker pull busybox
+docker tag busybox localhost:5000/busybox
+docker push localhost:5000/busybox
+</pre>
+
+</div>
+</li>
+</ul>
+
+
+</article>
+
+</slide>
+
+</slide>
+<slide id="sec-9-17"  >
+<hgroup class="">
+       <h2 class=" ">Secret management</h2>
+       <h3></h3>
+       </hgroup>
+<article class="" id="text-9-17">
+<ul>
+<li>Docker has a "secret safe" (secure key→value store)
+</li>
+<li>You can create as many secrets as you like
+</li>
+<li>You can associate secrets to services
+</li>
+<li>Secrets are exposed as plain text files, but kept in memory only (using tmpfs)
+</li>
+<li>Secrets are immutable (at least in Engine 1.13)
+</li>
+<li>Secrets have a max size of 500 KB
+</li>
+</ul>
+
+
+</article>
+
+</slide>
+
+</slide>
+<slide id="sec-9-18"  >
+<hgroup class="">
+       <h2 class=" ">Secrets in practice</h2>
+       <h3></h3>
+       </hgroup>
+<article class="" id="text-9-18">
+<ul>
+<li>Can be (ab)used to hold whole configuration files if needed
+</li>
+<li>If you intend to rotate secret foo, call it foo.N instead, and map it to foo
+(N can be a serial, a timestamp&#x2026;)
+
+<div class="org-src-container">
+
+<pre class="prettyprint" data-lang="sh">
+docker service create --secret source=foo.N,target=foo ...
+</pre>
+
+</div>
+</li>
+
+<li>You can update (remove+add) a secret in a single command:
+
+<div class="org-src-container">
+
+<pre class="prettyprint" data-lang="sh">
+docker service update ... --secret-rm foo.M --secret-add source=foo.N,target=foo
+</pre>
+
+</div>
+</li>
+</ul>
+
+
+</article>
+
+</slide>
+
+
+</slide>
+<slide id="sec-9-19"  >
+<hgroup class="">
+       <h2 class=" ">Local volumes vs. global volumes</h2>
+       <h3></h3>
+       </hgroup>
+<article class="" id="text-9-19">
+<ul>
+<li>Global volumes exist in a single namespace
+</li>
+<li>A global volume can be mounted on any node
+(bar some restrictions specific to the volume driver in use; e.g. using an EBS-backed volume on a GCE/EC2 mixed cluster)
+</li>
+<li>Attaching a global volume to a container allows to start the container anywhere
+(and retain its data wherever you start it!)
+</li>
+<li>Global volumes require extra plugins (Flocker, Portworx&#x2026;)
+</li>
+<li>Docker doesn't come with a default global volume driver at this point
+</li>
+<li>Therefore, we will fall back on local volumes (and use constraint
+for our services)
+</li>
+</ul>
+
+
+</article>
+
+</slide>
+
+</slide>
+<slide id="sec-9-20"  >
+<hgroup class="">
+       <h2 class=" ">An app on the swarm</h2>
+       <h3></h3>
+       </hgroup>
+<article class="" id="text-9-20">
+<ul>
+<li>Build on our local node (node1)
+</li>
+<li>Tag images with a version number
+(timestamp; git hash; semantic&#x2026;)
+</li>
+<li>Upload them to a registry
+</li>
+<li>Create services using the images
+</li>
+</ul>
+
+
+</article>
+
+</slide>
+</slide>
+<slide id="sec-9-21"  >
+<hgroup class="">
+       <h2 class=" ">Without stacks (1/3)</h2>
+       <h3></h3>
+       </hgroup>
+<article class="" id="text-9-21">
+<ul>
+<li>We use <code>docker-compose</code> to test develop and run our application
+</li>
+<li>Let's build, tag and push our images
+
+<div class="org-src-container">
+
+<pre class="prettyprint" data-lang="sh">
+DOCKER_REGISTRY=localhost:5000
+TAG=v0.1
+for SERVICE in hasher rng webui worker; do
+    docker-compose build $SERVICE
+    docker tag dockercoins_$SERVICE $DOCKER_REGISTRY/dockercoins_$SERVICE:$TAG
+    docker push $DOCKER_REGISTRY/dockercoins_$SERVICE
+done
+</pre>
+
+</div>
+</li>
+<li>We'll create a network for our application
+
+<div class="org-src-container">
+
+<pre class="prettyprint" data-lang="sh">
+docker network create --driver overlay dockercoins
+</pre>
+
+</div>
+</li>
+</ul>
+
+
+</article>
+
+</slide>
+
+</slide>
+<slide id="sec-9-22"  >
+<hgroup class="">
+       <h2 class=" ">Without stacks (2/3)</h2>
+       <h3></h3>
+       </hgroup>
+<article class="" id="text-9-22">
+<ul>
+<li>Let's create the services
+
+<div class="org-src-container">
+
+<pre class="prettyprint" data-lang="sh">
+DOCKER_REGISTRY=localhost:5000
+TAG=v0.1
+for SERVICE in hasher rng webui worker; do
+    docker service create --network dockercoins --name $SERVICE \
+	   $DOCKER_REGISTRY/dockercoins_$SERVICE:$TAG
+done
+</pre>
+
+</div>
+</li>
+
+<li>And validate it works by exposing the web ui
+
+<div class="org-src-container">
+
+<pre class="prettyprint" data-lang="sh">
+docker service update webui --publish-add 8000:80
+</pre>
+
+</div>
+</li>
+
+<li>We can now scale part of our application, update it, …
+
+<div class="org-src-container">
+
+<pre class="prettyprint" data-lang="sh">
+docker service update --replicas 10 worker
+</pre>
+
+</div>
+</li>
+</ul>
+
+
+</article>
+
+</slide>
+
+</slide>
+<slide id="sec-9-23"  >
+<hgroup class="">
+       <h2 class=" ">Without stacks (3/3)</h2>
+       <h3></h3>
+       </hgroup>
+<article class="" id="text-9-23">
+<ul>
+<li>To update we will update the image, push it and then call
+<code>service update</code>. But first, let's update/define an upgrade
+policy.
+
+<div class="org-src-container">
+
+<pre class="prettyprint" data-lang="sh">
+# Update task 2 by 2, separate by 5s
+docker service update --update-paralellism 2 --update-delay 5s worker
+# update
+docker service update --image $DOCKER_REGISTRY/dockercoins_worker:v0.2
+</pre>
+
+</div>
+
+<p>
+If something wrong happens, you can rollback
+</p>
+
+<div class="org-src-container">
+
+<pre class="prettyprint" data-lang="sh">
+docker service update --image $DOCKER_REGISTRY/dockercoins_worker:v0.1
+# Using docker &gt;= 1.13
+docker service update --rollback
+</pre>
+
+</div>
+</li>
+</ul>
+
+
+</article>
+
+</slide>
+
+
+</slide>
+<slide id="sec-9-24"  >
+<hgroup class="">
+       <h2 class=" ">With stacks</h2>
+       <h3></h3>
+       </hgroup>
+<article class="" id="text-9-24">
+<p>
+Building and pushing stack services
+</p>
+
+<ul>
+<li>We are going to use the build + image trick that we showed earlier:
+
+<div class="org-src-container">
+
+<pre class="prettyprint" data-lang="sh">
+docker-compose -f my_stack_file.yml build
+docker-compose -f my_stack_file.yml push
+docker stack deploy my_stack --compose-file my_stack_file.yml
+</pre>
+
+</div>
+</li>
+
+<li>To update, update your compose file and re-deploy
+
+<div class="org-src-container">
+
+<pre class="prettyprint" data-lang="sh">
+# Do some changes, update the compose file
+docker-compose -f my_stack_file.yml build
+docker-compose -f my_stack_file push
+docker stack deploy my_stack --compose-file my_stack_file.yml
+</pre>
+
+</div>
+</li>
+</ul>
+
+
+</article>
+
+</slide>
+
+</slide>
+<slide class="backdrop"></slide>
+</slides> 
+<!--[if IE]>
+  <script src="http://ajax.googleapis.com/ajax/libs/chrome-frame/1/CFInstall.min.js"></script>
+  <script>CFInstall.check({mode: 'overlay'});</script>
+<![endif]-->
+</body> 
+
+</html>
