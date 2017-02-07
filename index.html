@@ -2,7 +2,7 @@
 <html>
 <head>
 <title></title>
-<!-- 2017-02-07 Tue 22:18 -->
+<!-- 2017-02-07 Tue 22:47 -->
 <meta  charset="utf-8" />
 <meta  htto-equiv="X-UA-Compatible" content="chrome=1" />
 <meta  name="generator" content="Org-mode with org-ioslide" />
@@ -42,16 +42,32 @@
        <h3></h3>
        </hgroup>
 <article class="" id="text-1">
-<span style="text-align: right;float:right; display: block; width: 50%;">Docker maintainer<br/>certified trainer<br><span style="font-size: 2em;">🐳</span></span>
+
+<div class="figure">
+<p><img src="images/animals-august2015.png" alt="animals-august2015.png" width="400px" style="float: right; margin-right: -3em;" />
+</p>
+</div>
 
 <ul>
-<li>I'm a developer, devops, craftsman — <i>I 💓 &amp; work <b>@Docker</b></i>
+<li>I'm a developer, devops, craftsman, <i>factotum</i>
 </li>
 <li>I 💓 GNU/Linux 🐧, Docker 🐳 &amp; GNU/Emacs 🐪
 </li>
 <li>I 💓 Free-software !
 </li>
 <li>I 💓 <b>Go</b>, <i>Java</i>, Python and much more
+</li>
+<li>I maintain amongst other projects
+<ul>
+<li><code>docker/docker</code> 🐳
+</li>
+<li><code>docker/libcompose</code> 🐙
+</li>
+<li><code>containous/traefik</code> 🐹
+</li>
+</ul>
+</li>
+<li>I work for <b>@Docker</b> on the <code>#core</code> team
 </li>
 <li>And I 💓 unicode, 🚴 &amp; 🚶
 </li>
@@ -893,19 +909,108 @@ The demo, at home 🏡
 </slide>
 <slide id="sec-9-1"  >
 <hgroup class="">
-       <h2 class=" ">Cluster setup</h2>
+       <h2 class=" ">Cluster setup (1/2)</h2>
        <h3></h3>
        </hgroup>
+<article class="" id="text-9-1">
+<p>
+This demo cluster is setup using <code>docker-machine</code> because it's easy
+and straighforward.
+</p>
+
+<ul>
+<li>Choose the provider you want (<code>digitalocean</code> for the demo)
+
+<div class="org-src-container">
+
+<pre class="prettyprint" data-lang="sh">
+# For digital ocean, let's export the token to ease the later commands
+export DO_TOKEN=7b54b35…
+</pre>
+
+</div>
+</li>
+
+<li>We'll first create machines (repeat thing for the number of
+machine you want)
+
+<div class="org-src-container">
+
+<pre class="prettyprint" data-lang="sh">
+docker-machine create --driver=digitalocean \
+	       --digitalocean-access-token=$DO_TOKEN \
+	       --digitalocean-region=ams2 --digitalocean-image=debian-8-x64 \
+	       --engine-opt "experimental" manager1
+</pre>
+
+</div>
+</li>
+</ul>
+
+
+</article>
 
 </slide>
 
 </slide>
 <slide id="sec-9-2"  >
 <hgroup class="">
-       <h2 class=" ">Under the hood: docker swarm init</h2>
+       <h2 class=" ">Cluster setup (2/2)</h2>
        <h3></h3>
        </hgroup>
 <article class="" id="text-9-2">
+<ul>
+<li>Then let's init the swarm on a manager (<code>manager1</code>)
+
+<div class="org-src-container">
+
+<pre class="prettyprint" data-lang="sh">
+docker-machine ssh manager1 "docker swarm init"
+</pre>
+
+</div>
+</li>
+
+<li>Let's get the tokens (manager and worker)
+
+<div class="org-src-container">
+
+<pre class="prettyprint" data-lang="sh">
+docker-machine ssh manager1 "docker swarm join-token manager -q"
+docker-machine ssh manager1 "docker swarm join-token worker -q"
+</pre>
+
+</div>
+</li>
+
+<li>And make the other nodes join the swarm
+
+<div class="org-src-container">
+
+<pre class="prettyprint" data-lang="sh">
+docker-mahine ssh manager2 "docker swarm join --token ${manager_token} \
+		     --listen-addr $(docker-machine ip manager2) \
+		     --advertise-addr $(docker-machine ip manager2) \
+		     $(docker-machine ip manager1)"
+</pre>
+
+</div>
+</li>
+</ul>
+
+
+</article>
+
+</slide>
+
+
+</slide>
+<slide id="sec-9-3"  >
+<hgroup class="">
+       <h2 class=" ">Under the hood: docker swarm init</h2>
+       <h3></h3>
+       </hgroup>
+<article class="" id="text-9-3">
 <p>
 When we do docker swarm init:
 </p>
@@ -927,12 +1032,12 @@ When we do docker swarm init:
 </slide>
 
 </slide>
-<slide id="sec-9-3"  >
+<slide id="sec-9-4"  >
 <hgroup class="">
        <h2 class=" ">Under the hood: join tokens</h2>
        <h3></h3>
        </hgroup>
-<article class="" id="text-9-3">
+<article class="" id="text-9-4">
 <p>
 There is one token to join as a worker, and another to join as a manager.
 </p>
@@ -962,12 +1067,12 @@ docker swarm join-token --rotate &lt;worker|manager&gt;
 
 
 </slide>
-<slide id="sec-9-4"  >
+<slide id="sec-9-5"  >
 <hgroup class="">
        <h2 class=" ">Under the hood: docker swarm join</h2>
        <h3></h3>
        </hgroup>
-<article class="" id="text-9-4">
+<article class="" id="text-9-5">
 <p>
 When a node joins the Swarm:
 </p>
@@ -998,12 +1103,12 @@ When a node joins the Swarm:
 
 
 </slide>
-<slide id="sec-9-5"  >
+<slide id="sec-9-6"  >
 <hgroup class="">
        <h2 class=" ">IP address to advertise</h2>
        <h3></h3>
        </hgroup>
-<article class="" id="text-9-5">
+<article class="" id="text-9-6">
 <ul>
 <li>When running in Swarm mode, each node advertises its address to the others
 (i.e. it tells them "you can contact me on 10.1.2.3:2377")
@@ -1027,12 +1132,12 @@ When a node joins the Swarm:
 </slide>
 
 </slide>
-<slide id="sec-9-6"  >
+<slide id="sec-9-7"  >
 <hgroup class="">
        <h2 class=" ">Join the cluster – gotchas</h2>
        <h3></h3>
        </hgroup>
-<article class="" id="text-9-6">
+<article class="" id="text-9-7">
 <ul>
 <li><b>If your nodes have only one IP address, it's safe to let
 autodetection do the job</b>
@@ -1056,12 +1161,12 @@ is reachable by every other node of the Swarm</b>
 </slide>
 
 </slide>
-<slide id="sec-9-7"  >
+<slide id="sec-9-8"  >
 <hgroup class="">
        <h2 class=" ">How many managers do we need?</h2>
        <h3></h3>
        </hgroup>
-<article class="" id="text-9-7">
+<article class="" id="text-9-8">
 <ul>
 <li>2N+1 nodes can (and will) tolerate N failures
 (you can have an even number of managers, but there is no point)
@@ -1082,12 +1187,12 @@ is reachable by every other node of the Swarm</b>
 </slide>
 
 </slide>
-<slide id="sec-9-8"  >
+<slide id="sec-9-9"  >
 <hgroup class="">
        <h2 class=" ">Running our first Swarm service</h2>
        <h3></h3>
        </hgroup>
-<article class="" id="text-9-8">
+<article class="" id="text-9-9">
 <ul>
 <li>Create a service featuring an Alpine container pinging Google resolvers:
 
@@ -1134,12 +1239,12 @@ docker service logs &lt;serviceID&gt;
 </slide>
 
 </slide>
-<slide id="sec-9-9"  >
+<slide id="sec-9-10"  >
 <hgroup class="">
        <h2 class=" ">Expose and update a service</h2>
        <h3></h3>
        </hgroup>
-<article class="" id="text-9-9">
+<article class="" id="text-9-10">
 <p>
 Services can be exposed, with two special properties:
 </p>
@@ -1179,12 +1284,12 @@ docker service scale hello=10
 </slide>
 
 </slide>
-<slide id="sec-9-10"  >
+<slide id="sec-9-11"  >
 <hgroup class="">
        <h2 class=" ">Tasks lifecycle</h2>
        <h3></h3>
        </hgroup>
-<article class="" id="text-9-10">
+<article class="" id="text-9-11">
 <ul>
 <li>If you are fast enough, you will be able to see multiple states:
 <ul>
@@ -1207,12 +1312,12 @@ docker service scale hello=10
 </slide>
 
 </slide>
-<slide id="sec-9-11"  >
+<slide id="sec-9-12"  >
 <hgroup class="">
        <h2 class=" ">Timeline of an upgrade</h2>
        <h3></h3>
        </hgroup>
-<article class="" id="text-9-11">
+<article class="" id="text-9-12">
 <ul>
 <li>SwarmKit will upgrade N instances at a time
 (following the update-parallelism parameter)
@@ -1239,12 +1344,12 @@ to Shutdown
 
 
 </slide>
-<slide id="sec-9-12"  >
+<slide id="sec-9-13"  >
 <hgroup class="">
        <h2 class=" ">Overlay network</h2>
        <h3></h3>
        </hgroup>
-<article class="" id="text-9-12">
+<article class="" id="text-9-13">
 <ul>
 <li>SwarmKit integrates with overlay networks, without requiring an extra key/value store
 </li>
@@ -1283,12 +1388,12 @@ docker service create --network demo-net --name curlito nathanleclaire/curl sh -
 </slide>
 
 </slide>
-<slide id="sec-9-13"  >
+<slide id="sec-9-14"  >
 <hgroup class="">
        <h2 class=" ">Securing overlay networks (1/2)</h2>
        <h3></h3>
        </hgroup>
-<article class="" id="text-9-13">
+<article class="" id="text-9-14">
 <ul>
 <li>By default, overlay networks are using plain VXLAN encapsulation
 (~Ethernet over UDP, using SwarmKit's control plane for ARP resolution)
@@ -1324,12 +1429,12 @@ docker network create secure --opt encrypted --driver overlay --attachable
 </slide>
 
 </slide>
-<slide id="sec-9-14"  >
+<slide id="sec-9-15"  >
 <hgroup class="">
        <h2 class=" ">Securing overlay networks (2/2)</h2>
        <h3></h3>
        </hgroup>
-<article class="" id="text-9-14">
+<article class="" id="text-9-15">
 <ul>
 <li>Start a service in one node, and "sniff" network from another
 
@@ -1367,12 +1472,12 @@ docker run --rm --net secure nicolaka/netshoot curl web
 
 
 </slide>
-<slide id="sec-9-15"  >
+<slide id="sec-9-16"  >
 <hgroup class="">
        <h2 class=" ">Setup a registry (for this demo) (1/2)</h2>
        <h3></h3>
        </hgroup>
-<article class="" id="text-9-15">
+<article class="" id="text-9-16">
 <ul>
 <li>We need to run a registry:2 container
 (make sure you specify tag :2 to run the new version!)
@@ -1399,12 +1504,12 @@ so that it's available through localhost:5000 on each node
 </slide>
 
 </slide>
-<slide id="sec-9-16"  >
+<slide id="sec-9-17"  >
 <hgroup class="">
        <h2 class=" ">Setup a registry (for this demo) (2/2)</h2>
        <h3></h3>
        </hgroup>
-<article class="" id="text-9-16">
+<article class="" id="text-9-17">
 <ul>
 <li>Create the registry service, publishing its port on the whole
 cluster
@@ -1454,12 +1559,12 @@ docker push localhost:5000/busybox
 </slide>
 
 </slide>
-<slide id="sec-9-17"  >
+<slide id="sec-9-18"  >
 <hgroup class="">
        <h2 class=" ">Secret management</h2>
        <h3></h3>
        </hgroup>
-<article class="" id="text-9-17">
+<article class="" id="text-9-18">
 <ul>
 <li>Docker has a "secret safe" (secure key→value store)
 </li>
@@ -1481,12 +1586,12 @@ docker push localhost:5000/busybox
 </slide>
 
 </slide>
-<slide id="sec-9-18"  >
+<slide id="sec-9-19"  >
 <hgroup class="">
        <h2 class=" ">Secrets in practice</h2>
        <h3></h3>
        </hgroup>
-<article class="" id="text-9-18">
+<article class="" id="text-9-19">
 <ul>
 <li>Can be (ab)used to hold whole configuration files if needed
 </li>
@@ -1521,12 +1626,12 @@ docker service update ... --secret-rm foo.M --secret-add source=foo.N,target=foo
 
 
 </slide>
-<slide id="sec-9-19"  >
+<slide id="sec-9-20"  >
 <hgroup class="">
        <h2 class=" ">Local volumes vs. global volumes</h2>
        <h3></h3>
        </hgroup>
-<article class="" id="text-9-19">
+<article class="" id="text-9-20">
 <ul>
 <li>Global volumes exist in a single namespace
 </li>
@@ -1551,12 +1656,12 @@ for our services)
 </slide>
 
 </slide>
-<slide id="sec-9-20"  >
+<slide id="sec-9-21"  >
 <hgroup class="">
        <h2 class=" ">An app on the swarm</h2>
        <h3></h3>
        </hgroup>
-<article class="" id="text-9-20">
+<article class="" id="text-9-21">
 <ul>
 <li>Build on our local node (node1)
 </li>
@@ -1574,12 +1679,12 @@ for our services)
 
 </slide>
 </slide>
-<slide id="sec-9-21"  >
+<slide id="sec-9-22"  >
 <hgroup class="">
        <h2 class=" ">Without stacks (1/3)</h2>
        <h3></h3>
        </hgroup>
-<article class="" id="text-9-21">
+<article class="" id="text-9-22">
 <ul>
 <li>We use <code>docker-compose</code> to test develop and run our application
 </li>
@@ -1617,12 +1722,12 @@ docker network create --driver overlay dockercoins
 </slide>
 
 </slide>
-<slide id="sec-9-22"  >
+<slide id="sec-9-23"  >
 <hgroup class="">
        <h2 class=" ">Without stacks (2/3)</h2>
        <h3></h3>
        </hgroup>
-<article class="" id="text-9-22">
+<article class="" id="text-9-23">
 <ul>
 <li>Let's create the services
 
@@ -1669,12 +1774,12 @@ docker service update --replicas 10 worker
 </slide>
 
 </slide>
-<slide id="sec-9-23"  >
+<slide id="sec-9-24"  >
 <hgroup class="">
        <h2 class=" ">Without stacks (3/3)</h2>
        <h3></h3>
        </hgroup>
-<article class="" id="text-9-23">
+<article class="" id="text-9-24">
 <ul>
 <li>To update we will update the image, push it and then call
 <code>service update</code>. But first, let's update/define an upgrade
@@ -1714,12 +1819,12 @@ docker service update --rollback
 
 
 </slide>
-<slide id="sec-9-24"  >
+<slide id="sec-9-25"  >
 <hgroup class="">
        <h2 class=" ">With stacks</h2>
        <h3></h3>
        </hgroup>
-<article class="" id="text-9-24">
+<article class="" id="text-9-25">
 <p>
 Building and pushing stack services
 </p>
