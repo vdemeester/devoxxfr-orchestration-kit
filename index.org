@@ -35,7 +35,7 @@
   - =docker/docker= 🐳
   - =docker/libcompose= 🐙
   - =containous/traefik= 🐹
-- I work for *@Docker* on the =#core= team
+- I work for *@Docker* in the =#core= team
 - And I 💓 unicode, 🚴 & 🚶
 
 * Plan
