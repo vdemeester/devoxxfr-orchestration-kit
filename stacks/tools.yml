@@ -1,0 +1,87 @@
+version: "3"
+
+services:
+  traefik:
+    image: traefik:v1.1.2
+    command: --web --docker --docker.swarmmode=1 --docker.domain=docker.sbr.pm --loglevel=DEBUG
+    ports:
+      - 80:80
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - traefik-net
+    deploy:
+      labels:
+        - "traefik.port=8080"
+        - "traefik.frontend.rule=Host:dashboard.docker.sbr.pm"
+        - "traefik.frontend.passHostHeader=true"
+      placement:
+        constraints:
+          - node.role == manager
+          
+  visualizer:
+    image: manomarks/visualizer
+    environment:
+      - PORT=8080
+      - HOST=visualizer.docker.sbr.pm
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - traefik-net
+    deploy:
+      labels:
+        - "traefik.port=8080"
+        - "traefik.frontend.rule=Host:visualizer.docker.sbr.pm"
+        - "traefik.frontend.passHostHeader=true"
+      placement:
+        constraints:
+          - node.role == manager
+
+  graphana:
+    image: grafana/grafana:3.1.1
+    networks:
+      - traefik-net
+    deploy:
+      labels:
+        - "traefik.port=3000"
+        - "traefik.frontend.rule=Host:graph.docker.sbr.pm"
+        - "traefik.frontend.passHostHeader=true"
+    
+
+  prometheus:
+    build: prom
+    image: localhost:5000/prom
+    networks:
+      - traefik-net
+    deploy:
+      labels:
+        - "traefik.port=9090"
+        - "traefik.frontend.rule=Host:prom.docker.sbr.pm"
+        - "traefik.frontend.passHostHeader=true"
+          
+  node:
+    image: prom/node-exporter
+    command: -collector.procfs /host/proc -collector.sysfs /host/proc -collector.filesystem.ignored-mount-points "^(sys|proc|dev|host|etc)($$|/)"
+    deploy:
+      mode: global
+    networks:
+      - traefik-net
+    volumes:
+      - "/proc:/host/proc"
+      - "/sys:/host/sys"
+      - "/:/rootfs"
+
+  cadvisor:
+    image: google/cadvisor
+    deploy:
+      mode: global
+    networks:
+      - traefik-net
+    volumes:
+      - "/:/rootfs"
+      - "/var/run:/var/run"
+      - "/sys:/sys"
+      - "/var/lib/docker:/var/lib/docker"
+      
+networks:
+  traefik-net:
