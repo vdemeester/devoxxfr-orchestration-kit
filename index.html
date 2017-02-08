@@ -2,7 +2,7 @@
 <html>
 <head>
 <title></title>
-<!-- 2017-02-08 Wed 13:33 -->
+<!-- 2017-02-08 Wed 17:10 -->
 <meta  charset="utf-8" />
 <meta  htto-equiv="X-UA-Compatible" content="chrome=1" />
 <meta  name="generator" content="Org-mode with org-ioslide" />
@@ -57,7 +57,7 @@
 </li>
 <li>I 💓 <b>Go</b>, <i>Java</i>, Python and much more
 </li>
-<li>I maintain amongst other projects
+<li>I maintain, amongst other projects,
 <ul>
 <li><code>docker/docker</code> 🐳
 </li>
@@ -86,15 +86,15 @@
        </hgroup>
 <article class="" id="text-2">
 <ul>
-<li>Orchestration, wat ? why ?
+<li>Orchestration 🕸, wat ? why ?
 </li>
-<li>Your choice !
+<li>Your choice ! 🐣
 </li>
-<li>Docker, wat ?
+<li>Docker 🐳
 </li>
-<li>Swarm, the old way, the new way…
+<li>Docker Swarm 🐝, the old way, the new way…
 </li>
-<li>Demo, demo, demo
+<li>Demo, demo, demo 🌠
 </li>
 </ul>
 
@@ -165,6 +165,8 @@ Cluster
 </p>
 
 <ul>
+<li>You might not have a choice 👼
+</li>
 <li>Enhance availability
 </li>
 <li>Scale easily
@@ -180,11 +182,11 @@ Orchestration
 </p>
 
 <ul>
-<li>Continuous deployement
+<li>Continuous deployment
 </li>
-<li>Efficiency
+<li>Ease the deployment and maintenance
 </li>
-<li>Agility
+<li>Efficiency, Agility
 </li>
 <li>« You want to deploy, not to think how to deploy »
 </li>
@@ -290,15 +292,13 @@ Orchestration
 </li>
 <li>Mesos (apache, mesosphere)
 </li>
-<li>Openstack (?) <code>o_O</code>
-</li>
 </ul>
 </li>
 <li>O.V.N.I.
 <ul>
-<li>Amazon web services
+<li>Amazon web services (ECS, EC2…)
 </li>
-<li>Goggle cloud
+<li>Goggle cloud (GCE)
 </li>
 </ul>
 </li>
@@ -407,6 +407,7 @@ applications inside softwark containers.
 </article>
 
 </slide>
+
 </slide>
 <slide id="sec-5-2" class="fill white nobackground" style="background-image: url(images/goldengate-containers.jpg)">
 <hgroup class="">
@@ -528,12 +529,6 @@ $ docker ps
 
 </div>
 
-<article class="flexbox vcenter">
-<p>
-<b>Démo 🙆</b>
-</p>
-</article>
-
 
 </article>
 
@@ -549,7 +544,7 @@ $ docker ps
        </hgroup>
 <article class="flexbox vleft auto-fadein" id="text-6">
 <p>
-An horror story of naming 🐒
+An name horror story 🐒
 </p>
 
 
@@ -611,7 +606,7 @@ group of Docker engines into a single, virtual Docker Engine.
 <ul>
 <li>Same Docker API, with pros and cons
 </li>
-<li>Required an external key/value store (etcd, consul, …)
+<li>Requires an external key/value store (etcd, consul, …)
 </li>
 <li>No <i>service model</i> (scaling, updates, discovery,
 load-balancing not built-in)
@@ -649,14 +644,14 @@ scheduling and more.
 </blockquote>
 
 <p>
-The <b>swarm mode</b> is the implementation of <code>docker/swarmkit</code> in the
+The <b>swarm mode</b> is <code>docker/swarmkit</code> integrated in the
 <code>docker</code> engine, starting from <b>1.12</b>.
 </p>
 
 <ul>
-<li>Enhance the docker API, integrated with <code>docker</code>
+<li>Enhance the docker API
 </li>
-<li>Not an external key/value store
+<li>No need for an external key/value store
 </li>
 <li><b>Secure</b> by default (automatic TLS keying and signing)
 </li>
@@ -816,8 +811,8 @@ Let's play 🎮
 </li>
 <li>1 cluster visualizer
 </li>
-<li>Træfik on manager(s)
-</li>
+</ul>
+<ul>
 <li>Monitoring tools (elk, …)
 </li>
 <li>Lot's of non useful apps 👼

@@ -4,6 +4,15 @@ docker service create alpine ping 8.8.8.8
 docker service ps <serviceID>
 docker service logs --follow <serviceID>
 
+- Taking health into account
+
+docker service create --health-cmd "cat /etc/passwd" \
+       --health-interval 10s --health-retries 2 \
+       alpine
+# find the container
+docker exec <containerID> rm /etc/passwd
+# watch the service reschedule the task somewhere else
+
 - Scale, update, wrong command and update
 
 docker service update --replicas 10 <serviceID>
@@ -122,6 +131,8 @@ docker service create --network dockercoins --name $SERVICE \
 done
 docker service update webui --publish-add 8000:80
 docker service update worker --replicas 10
+
+# Update by changing the TAG, re-building for ex'
 
 - Stacks 👼
 

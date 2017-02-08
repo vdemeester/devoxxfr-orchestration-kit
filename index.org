@@ -31,7 +31,7 @@
 - I 💓 GNU/Linux 🐧, Docker 🐳 & GNU/Emacs 🐪
 - I 💓 Free-software !
 - I 💓 *Go*, /Java/, Python and much more
-- I maintain amongst other projects
+- I maintain, amongst other projects,
   - =docker/docker= 🐳
   - =docker/libcompose= 🐙
   - =containous/traefik= 🐹
@@ -40,11 +40,11 @@
 
 * Plan
 
-  - Orchestration, wat ? why ?
-  - Your choice !
-  - Docker, wat ?
-  - Swarm, the old way, the new way…
-  - Demo, demo, demo
+  - Orchestration 🕸, wat ? why ?
+  - Your choice ! 🐣
+  - Docker 🐳
+  - Docker Swarm 🐝, the old way, the new way…
+  - Demo, demo, demo 🌠
 
 * Orchestration 🕸
   :PROPERTIES:
@@ -74,6 +74,7 @@
 
    Cluster
 
+   - You might not have a choice 👼
    - Enhance availability
    - Scale easily
    - Distribute the load
@@ -81,9 +82,9 @@
 
    Orchestration
 
-   - Continuous deployement
-   - Efficiency
-   - Agility
+   - Continuous deployment
+   - Ease the deployment and maintenance
+   - Efficiency, Agility
    - « You want to deploy, not to think how to deploy »
 
 ** Features (1/2)
@@ -122,10 +123,9 @@
   * General purpose
     * Nomad (hashicorp)
     * Mesos (apache, mesosphere)
-    * Openstack (?) =o_O=
   * O.V.N.I.
-    * Amazon web services
-    * Goggle cloud
+    * Amazon web services (ECS, EC2…)
+    * Goggle cloud (GCE)
 
 ** Behind the scenes
 
@@ -166,6 +166,7 @@
    - Company: Docker Inc.
    - Platform: dockerd (engine), docker (cli)
    - Tools: compose, swarmkit, containerd
+
 ** Metaphor
 :PROPERTIES:
 :FILL:     images/goldengate-containers.jpg
@@ -222,17 +223,13 @@ $ docker run -d -v /tmp/.X11-unix:/tmp/.X11 \
 $ docker ps
 #+END_SRC
 
-#+BEGIN_CENTER
-*Démo 🙆*
-#+END_CENTER
-
 * Docker Swarm 🐝
   :PROPERTIES:
   :SLIDE:    segue dark quote
   :ASIDE:    right bottom
   :ARTICLE:  flexbox vleft auto-fadein
   :END:
-  An horror story of naming 🐒
+  An name horror story 🐒
 
 ** Small name confusion ?
 
@@ -259,7 +256,7 @@ $ docker ps
    #+END_QUOTE
 
    - Same Docker API, with pros and cons
-   - Required an external key/value store (etcd, consul, …)
+   - Requires an external key/value store (etcd, consul, …)
    - No /service model/ (scaling, updates, discovery,
      load-balancing not built-in)
    - Hard to setup (security, …)
@@ -276,11 +273,11 @@ $ docker ps
    -- github.com/docker/swarmkit
    #+END_QUOTE
 
-   The *swarm mode* is the implementation of =docker/swarmkit= in the
+   The *swarm mode* is =docker/swarmkit= integrated in the
    =docker= engine, starting from *1.12*.
 
-   - Enhance the docker API, integrated with =docker=
-   - Not an external key/value store
+   - Enhance the docker API
+   - No need for an external key/value store
    - *Secure* by default (automatic TLS keying and signing)
    - Easy to setup
    * =docker/swarmkit= can work without =docker= (with different runtimes)
@@ -340,7 +337,7 @@ $ docker ps
      - 3 managers
      - 5 workers
    - 1 cluster visualizer
-   - Træfik on manager(s)
+#   - Træfik on manager(s)
    - Monitoring tools (elk, …)
    - Lot's of non useful apps 👼
      - and a few useful ones 👼
