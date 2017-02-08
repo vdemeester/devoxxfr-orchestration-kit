@@ -57,6 +57,23 @@ docker service create --network demo-net --name curlito nathanleclaire/curl sh -
             "while true; do curl http://whoami/; sleep 2; done"
 docker service logs --follow curlito
 
+# docker exec in curltio
+nslookup whoami
+nslookup tasks.whoami
+
+# dnsrr (dns round robin) instead of voip
+
+docker service create \
+  --replicas 3 \
+  --name my-dnsrr-service \
+  --network demo-net \
+  --endpoint-mode dnsrr \
+  nginx
+
+nslookup my-dnsrr-service
+
+- Secure / insecure overlay networks
+
 docker network create --driver overlay --attachable insecure
 docker network create --opt encrypted --driver overlay --attachable secure
 docker service create --name web \
