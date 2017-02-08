@@ -24,6 +24,8 @@ services:
     environment:
       - PORT=8080
       - HOST=visualizer.docker.sbr.pm
+    ports:
+      - 8080:8080
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     networks:
@@ -41,6 +43,8 @@ services:
     image: grafana/grafana:3.1.1
     networks:
       - traefik-net
+    ports:
+      - 3000:3000
     deploy:
       labels:
         - "traefik.port=3000"
@@ -53,6 +57,8 @@ services:
     image: localhost:5000/prom
     networks:
       - traefik-net
+    ports:
+      - 9090:9090
     deploy:
       labels:
         - "traefik.port=9090"

@@ -16,6 +16,8 @@ services:
     image: ${REGISTRY_SLASH-localhost:5000/}webui${COLON_TAG-:latest}
     networks:
       - tools_traefik-net
+    ports:
+      - 8000:80
     deploy:
       labels:
         - "traefik.port=80"
