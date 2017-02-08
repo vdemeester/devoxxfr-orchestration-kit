@@ -1,0 +1,111 @@
+- Create simple service(s)
+
+docker service create alpine ping 8.8.8.8
+docker service ps <serviceID>
+docker service logs --follow <serviceID>
+
+- Scale, update, wrong command and update
+
+docker service update --replicas 10 <serviceID>
+
+docker service create alpine foo
+docker service ps <serviceID>
+docker service update --args="ping 8.8.8.8" <serviceID>
+
+- upgrade policy (and rollback)
+
+docker service create --name web --replicas 5 nginx:1.10
+docker service update --update-parallelism 2 --update-delay 10s web
+docker service update --image nginx:1.11 web
+
+docker service update --rollback web
+
+- Mode (replicated, global)
+
+docker service create --mode global alpine ping 8.8.8.8
+docker service ps <serviceID>
+
+- Expose a service
+
+docker service create -p 80:80 --replicas 3 emilevauge/whoami
+for N in $(seq 1 10); do
+  curl -s localhost:80
+done
+for N in $(seq 1 10); do
+  curl -s docker.sbr.pm:80
+done
+
+- Remove service
+
+docker service rm <serviceID>
+
+- Manage the swarm (node)
+
+docker node update --label-add foo=bar vdedemo-worker1
+docker node update --availability drain vdedemo-worker3
+
+- Services constraints
+
+docker service create --constraint node.labels.foo==bar --constraint engine.labels.disk=ssd redis
+docker service create --mode global --constraint node.role==manager nginx
+
+- Overlay networks
+
+docker network create --driver overlay demo-net
+docker service create --network demo-net --name whoami emilevauge/whoami
+docker service create --network demo-net --name curlito nathanleclaire/curl sh -c \
+            "while true; do curl http://whoami/; sleep 2; done"
+docker service logs --follow curlito
+
+docker network create --driver overlay --attachable insecure
+docker network create --opt encrypted --driver overlay --attachable secure
+docker service create --name web \
+       --network secure --network insecure \
+       --constraint node.hostname==vdedemo-manager2 \
+       nginx
+# on vdedemo-manager2
+docker run --net host jpetazzo/netshoot ngrep -tpd eth0 HTTP
+# on vdedemo-manager1
+docker run --rm --net insecure nicolaka/netshoot curl web
+# should display an HTTP frame
+docker run --rm --net secure nicolaka/netshoot curl web
+# should only display #
+
+- Secrets
+
+echo love | docker secret create hackme -
+base64 /dev/urandom | head -c16 | docker secret create arewesecureyet -
+docker service create \
+       --secret hackme --secret arewesecureyet \
+       --name dummyservice --mode global \
+       alpine sleep 1000000000
+# Update works the same :)
+docker service update --secret-rm hackme dummyservice
+docker service update dummyservice \
+     --secret-add source=arewesecureyet,target=hackme
+
+- Deploy app
+
+docker network create --driver overlay dockercoins
+
+DOCKER_REGISTRY=localhost:5000
+TAG=v0.1
+for SERVICE in hasher rng webui worker; do
+  docker-compose build $SERVICE
+  docker tag dockercoins_$SERVICE $DOCKER_REGISTRY/dockercoins_$SERVICE:$TAG
+  docker push $DOCKER_REGISTRY/dockercoins_$SERVICE
+done
+
+docker service create --network dockercoins --name redis redis
+DOCKER_REGISTRY=localhost:5000
+TAG=v0.1
+for SERVICE in hasher rng webui worker; do
+docker service create --network dockercoins --name $SERVICE \
+       $DOCKER_REGISTRY/dockercoins_$SERVICE:$TAG
+done
+docker service update webui --publish-add 8000:80
+docker service update worker --replicas 10
+
+- Stacks 👼
+
+docker stack deploy --compose-file dockercoins.yml dockercoins

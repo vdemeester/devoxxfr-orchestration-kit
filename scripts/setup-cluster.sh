@@ -88,9 +88,10 @@ echo "> Get demo repo on ${LEADER}"
 docker-machine ssh ${LEADER} "git clone https://github.com/vdemeester/orchestration-kit-snowcamp-2017.git"
 
 echo "> Execute some pre-steps"
-docker-machine ssh ${LEADER} "cd orchestration-kit-snowcamp-2017/stacks && \
-	       docker stack deploy --compose-file registry registry && \
-	       docker-compose build -f tools.yml build && \
-	       docker-compose build -f tools.yml push && \
-	       docker-compose build -f dockercoins.yml build && \
-	       docker-compose build -f dockercoins.yml push &&"
+docker-machine ssh ${LEADER} \
+	       "cd orchestration-kit-snowcamp-2017/stacks && \
+	       docker stack deploy --compose-file registry.yml registry && \
+	       docker-compose -f tools.yml build && \
+	       docker-compose -f tools.yml push && \
+	       docker-compose -f dockercoins.yml build && \
+	       docker-compose -f dockercoins.yml push"

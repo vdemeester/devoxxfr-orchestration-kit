@@ -615,7 +615,7 @@ $ docker ps
    - From node2, run the following
 
      #+BEGIN_SRC sh
-       docker run --rm --net insecure nicolaka/netshoot curl whoami
+       docker run --rm --net insecure nicolaka/netshoot curl web
        # should display an HTTP frame
        docker run --rm --net secure nicolaka/netshoot curl web
        # should only display #
