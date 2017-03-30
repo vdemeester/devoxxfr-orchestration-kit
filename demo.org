@@ -1,0 +1,23 @@
+* Setup the cluster
+  Have the node existing *and* with docker 17.03 pre-installed
+** Init the swarm
+** Join as manager or worker
+** List nodes
+** Update some nodes
+* Playing a bit
+** Service, task, container
+** Show me the logs
+** Publishing (routing-mesh)
+* Deploying my app
+** Create the network (encrypted)
+** Create initial service
+** Scale them up
+* Managing my app
+** Update services
+** Rollback services
+** Node failures ?
+* Bonus
+** Global plugin install
+** Secrets
+** Test it locally
+   See https://gist.github.com/thaJeztah/90d92e2114287144990b503efd952a3a
