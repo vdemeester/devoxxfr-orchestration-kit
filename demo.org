@@ -122,9 +122,11 @@ docker network create --driver overlay --opt encrypted exquisite
    Let's deploy this services
 
    #+BEGIN_SRC bash
-docker service create --name mongo --network exquisite mongo:3.3.8
-docker service create --name back --network exquisite --limit-memory 64M --reserve-memory 64M vdemeester/exquisite-words-java:v1
-docker service create --name front --network exquisite -p 80:80 vdemeester/exquisite-web:v1
+     docker service create --name mongo --network exquisite mongo:3.3.8
+     docker service create --name back --network exquisite \
+   	 --limit-memory 64M --reserve-memory 64M \
+   	 vdemeester/exquisite-words-java:v1
+     docker service create --name front --network exquisite -p 80:80 vdemeester/exquisite-web:v1
    #+END_SRC
 
 
