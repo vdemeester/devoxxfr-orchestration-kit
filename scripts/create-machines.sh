@@ -4,11 +4,11 @@ set -e
 
 test -z "$DO_TOKEN" && {
     echo "You need to set DO_TOKEN"
-    exit 1
+    # exit 1
 }
 
 MANAGERS=3
-WORKERS=5
+WORKERS=3
 MANAGER_PREFIX=vdedemo-manager
 WORKER_PREFIX=vdedemo-worker
 LEADER=${MANAGER_PREFIX}1
