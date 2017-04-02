@@ -304,7 +304,6 @@ $ docker ps
 ** Swarm mode (4/4)
 
    - *Services*: specified by its desired state, will create tasks
-     - desired state
    - *Tasks*:
      - attached to a /worker/
      - created from a service
