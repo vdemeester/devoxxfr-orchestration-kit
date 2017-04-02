@@ -87,7 +87,7 @@
    - Efficiency, Agility
    - « You want to deploy, not to think how to deploy »
 
-** Features (1/2)
+** Features
 
    - placement
    - scheduling
@@ -95,9 +95,6 @@
    - rules & constraints
    - load-balancing
    - update (rolling updates, …)
-
-** Features (2/2)
-
    - self-healing (health-monitoring, re-schedule)
    - discovery
    - secure

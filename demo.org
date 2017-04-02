@@ -1,23 +1,226 @@
+#+BEGIN_SRC bash
+source ./scripts/functions.sh
+#+END_SRC
+
+Have docker-compose installed locally and with the correct version.
+
 * Setup the cluster
   Have the node existing *and* with docker 17.03 pre-installed
 ** Init the swarm
+
+   List the machines…
+
+   #+BEGIN_SRC bash
+     docker-machine ls
+   #+END_SRC
+
+   … and init the swarm on manager1
+
+   #+BEGIN_SRC bash
+     docker-machine ssh vdedemo-manager1 docker swarm init --listen-addr $(docker-machine ip vdedemo-manager1) --advertise-addr $(docker-machine ip vdedemo-manager1)
+   #+END_SRC
+
 ** Join as manager or worker
+
+   List tokens (to have them later)
+
+   #+BEGIN_SRC bash
+docker-machine ssh vdedemo-manager1 docker swarm join-token worker
+docker-machine ssh vdedemo-manager1 docker swarm join-token manager
+   #+END_SRC
+
+   And join the swarm using these tokens.
+
+   #+BEGIN_SRC bash
+join-swarm vdedemo-manager2 ${MANAGER_TOKEN} ${DAEMON_IP}
+join-swarm vdedemo-manager3 ${WORKER_TOKEN} ${DAEMON_IP}
+join-swarm vdedemo-worker1 ${WORKER_TOKEN} ${DAEMON_IP}
+# …
+   #+END_SRC
+
 ** List nodes
+
+   #+BEGIN_SRC bash
+docker-machine ssh vdedemo-manager1 docker node ls
+docker-machine ssh vdedemo-manager2 docker node ls
+docker-machine ssh vdedemo-worker1 docker node ls
+   #+END_SRC
+
+
 ** Update some nodes
+
+   #+BEGIN_SRC bash
+docker node update --role=manager vdedemo-manager3
+docker node update --label-add foo=bar vdedemo-worker1
+docker node update --label-add foo=baz vdedemo-worker2
+   #+END_SRC
+
+
+** Visualize
+
+Let's also start a visualizer on the cluster to see what is going on.
+
+#+BEGIN_SRC bash
+which visualizer
+visualizer
+#+END_SRC
+
+
 * Playing a bit
 ** Service, task, container
+
+   #+BEGIN_SRC bash
+docker service create --name foo alpine ping 8.8.8.8
+docker service ls
+   #+END_SRC
+
+
 ** Show me the logs
+
+   #+BEGIN_SRC bash
+docker service logs foo
+   #+END_SRC
+
+   #+BEGIN_SRC bash
+docker service rm foo
+   #+END_SRC
+
+
 ** Publishing (routing-mesh)
+
+   #+BEGIN_SRC bash
+docker service create --name web -p 80:80 emilevauge/whoami
+docker service ls
+docker service ps web
+   #+END_SRC
+
+   And point to any ips (worker and manager)
+
+
 * Deploying my app
+
+  Now let's get a little bit more serious. We are going to deploy an
+  app, on it's own encrypted network.
+
+  Have the app deployed in local.
+
 ** Create the network (encrypted)
-** Create initial service
+
+   #+BEGIN_SRC bash
+docker network create --driver overlay --opt encrypted exquisite
+   #+END_SRC
+
+
+** Create initial service(s)
+
+   My app has the following services
+
+   - Frontend
+   - Backend
+   - Mongo
+
+   Let's deploy this services
+
+   #+BEGIN_SRC bash
+docker service create --name mongo --network exquisite mongo:3.3.8
+docker service create --name back --network exquisite --limit-memory 64M --reserve-memory 64M vdemeester/exquisite-words-java:v1
+docker service create --name front --network exquisite -p 80:80 vdemeester/exquisite-web:v1
+   #+END_SRC
+
+
 ** Scale them up
+
+Ok so to have more variety, we need to have more backend, right ?
+
+#+BEGIN_SRC bash
+docker service scale back=15
+# or …
+docker service update --replicas=15 back
+#+END_SRC
+
+
 * Managing my app
 ** Update services
+
+   I can add more frontends
+
+   #+BEGIN_SRC bash
+   docker service update --replicas=2 front
+   #+END_SRC
+
+   But what I want is to update my app (front and back), I changed a
+   few stuff.
+
+   First let's setup some update policy to have a safe net and not
+   update everything at once.
+
+   #+BEGIN_SRC bash
+   docker service update --update-parallelism 1 --update-delay 15s front
+   docker service update --update-parallelism 2 --update-deploy 10s back
+   #+END_SRC
+   
+   And update the things..
+
+   #+BEGIN_SRC bash
+   docker service update --image vdemeester/exquisite-web:v2 front
+   docker service update --image vdemeester/exquisite-words-java:v2 back
+   #+END_SRC
+
+
 ** Rollback services
+
+   Hum, yeah, I don't like that, I need to rollback...
+
+   #+BEGIN_SRC bash
+   docker service update --rollback front
+   #+END_SRC
+   
+
 ** Node failures ?
+
+   What if a node fails, weirdly.. Just shut it down in the cluster
+   (so we can debug what is happening) and see what is happening
+
+   #+BEGIN_SRC bash
+   docker node update --availability drain vdedemo-manager2
+   #+END_SRC
+
 * Bonus
+** Compose works on swarm !
+
+   What we did manually can be deployed using a compose file :
+
+   #+BEGIN_SRC bash
+   docker stack deploy --compose-file docker-compose.yml devoxx
+   #+END_SRC
+
+   Re-deploying this compose file updates what needs to be updated.
+   
+
 ** Global plugin install
+
+Plugins are cool, but it's a pain to install on the whole cluster,
+right ? Well not really, just create a global service that does that.
+
+#+BEGIN_SRC bash
+  docker service create --name bootstrap-plugin \
+	 --mode global --mount type=bind,source=/var/run/docker.sock,target=/var/run/docker.sock \
+	 --restart-condition none \
+	 docker:17.03 docker plugin install --grant-all-permissions vieux/sshfs
+#+END_SRC
+
+
 ** Secrets
+
+#+BEGIN_SRC bash
+echo love | docker secret create hackme -
+base64 /dev/urandom | head -c16 | docker secret create arewesecureyet -
+docker service create \
+       --secret hackme --secret arewesecureyet \
+       --name dummyservice --mode global \
+       alpine sleep 1000000000
+#+END_SRC
+
+
 ** Test it locally
    See https://gist.github.com/thaJeztah/90d92e2114287144990b503efd952a3a
