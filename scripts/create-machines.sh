@@ -7,11 +7,8 @@ test -z "$DO_TOKEN" && {
     # exit 1
 }
 
-MANAGERS=3
-WORKERS=3
-MANAGER_PREFIX=vdedemo-manager
-WORKER_PREFIX=vdedemo-worker
-LEADER=${MANAGER_PREFIX}1
+MACHINES=6
+MACHINES_PREFIX=vdedemo
 
 create-machine() {
     local name=$1
@@ -28,19 +25,9 @@ create-machine() {
 }
 
 echo "> Create manager"
-for node in $(seq 1 $MANAGERS); do
-    create-machine ${MANAGER_PREFIX}${node}
+for node in $(seq 1 $MACHINES); do
+    create-machine ${MACHINES_PREFIX}${node}
     sleep 5
 done
 
-echo "> Create workers"
-for node in $(seq 1 $WORKERS); do
-    n=$(($node%2))
-    ARGS="--engine-label group=group${n}"
-    if test $n -eq 1; then
-	ARGS="${ARGS} --engine-label disk=ssd"
-    fi
-    echo $ARGS
-    create-machine ${WORKER_PREFIX}${node} ${ARGS}
-    sleep 5
-done
+docker-machine scp ./docker-compose.yml ${MACHINES_PREFIX}1:~/

@@ -27,24 +27,24 @@
   #+ATTR_HTML: :width 400px :style float: right; margin-right: -3em;
   [[file:images/animals-august2015.png]]
 
-- I'm a developer, devops, craftsman, /factotum/
-- I 💓 GNU/Linux 🐧, Docker 🐳 & GNU/Emacs 🐪
-- I 💓 Free-software !
-- I 💓 *Go*, /Java/, Python and much more
-- I maintain, amongst other projects,
-  - =docker/docker= 🐳
-  - =docker/libcompose= 🐙
-  - =containous/traefik= 🐹
-- I work for *@Docker* in the =#core= team
-- And I 💓 unicode, 🚴 & 🚶
+  - I'm a developer, devops, craftsman, /factotum/
+  - I 💓 GNU/Linux 🐧, Docker 🐳 & GNU/Emacs 🐪
+  - I 💓 Free-software !
+  - I 💓 *Go*, /Java/, Python and much more
+  - I maintain, amongst other projects,
+    - =docker/docker= 🐳
+    - =docker/libcompose= 🐙
+    - =containous/traefik= 🐹
+  - I work for *@Docker* in the =#core= team
+  - And I 💓 unicode, 🚴 & 🚶
 
 * Plan
 
   - Orchestration 🕸, wat ? why ?
   - Your choice ! 🐣
   - Docker 🐳
-  - Docker Swarm 🐝, the old way, the new way…
-  - Demo, demo, demo 🌠
+  - Docker Swarm 🐝
+  - Demo 🌠
 
 * Orchestration 🕸
   :PROPERTIES:
@@ -72,16 +72,11 @@
 
 ** Why?
 
-   Cluster
-
    - You might not have a choice 👼
    - Enhance availability
    - Scale easily
    - Distribute the load
    - Manager resource easier
-
-   Orchestration
-
    - Continuous deployment
    - Ease the deployment and maintenance
    - Efficiency, Agility
@@ -112,17 +107,17 @@
 
 ** Existing tools
 
-  * Containers based
-    - *Swarm (docker)*
-    - Kubernetes (google)
-    - Rancher (rancher)
-    - Fleet (coreos)
-  * General purpose
-    * Nomad (hashicorp)
-    * Mesos (apache, mesosphere)
-  * O.V.N.I.
-    * Amazon web services (ECS, EC2…)
-    * Goggle cloud (GCE)
+   * Containers based
+     - *Swarm (docker)*
+     - Kubernetes (google)
+     - Rancher (rancher)
+     - Fleet (coreos)
+   * General purpose
+     * Nomad (hashicorp)
+     * Mesos (apache, mesosphere)
+   * O.V.N.I.
+     * Amazon web services (ECS, EC2…)
+     * Goggle cloud (GCE)
 
 ** Behind the scenes
 
@@ -136,6 +131,7 @@
      - chef, puppet, ansible, saltstack
    - Monitor
      - prometheus
+     - …
 
 * Docker 🐳
   :PROPERTIES:
@@ -165,46 +161,46 @@
    - Tools: compose, swarmkit, containerd
 
 ** Metaphor
-:PROPERTIES:
-:FILL:     images/goldengate-containers.jpg
-:TITLE:    white
-:SLIDE:    white
-:ARTICLE:  large
-:END:
+   :PROPERTIES:
+   :FILL:     images/goldengate-containers.jpg
+   :TITLE:    white
+   :SLIDE:    white
+   :ARTICLE:  large
+   :END:
 
-Goods transportation with container
+   Goods transportation with container
 
 ** Architecture
 
-#+BEGIN_QUOTE
-Standing on the shoulders of giants
-#+END_QUOTE
+   #+BEGIN_QUOTE
+   Standing on the shoulders of giants
+   #+END_QUOTE
 
-#+ATTR_HTML: :width 550px :style float: right;
-[[file:images/vm-vs-docker.png]]
+   #+ATTR_HTML: :width 550px :style float: right;
+   [[file:images/vm-vs-docker.png]]
 
-#+ATTR_HTML: :width 400px
-[[file:images/docker-isolation-small.png]]
+   #+ATTR_HTML: :width 400px
+   [[file:images/docker-isolation-small.png]]
 
-Quick note : /Repeat after me/ *Containers ARE NOT VMs !*
+   Quick note : /Repeat after me/ *Containers ARE NOT VMs !*
 
 ** Main "notions"
 
-#+ATTR_HTML: :width 400px :style float: right;
-[[file:images/docker-filesystems-multilayer-small.png]]
+   #+ATTR_HTML: :width 400px :style float: right;
+   [[file:images/docker-filesystems-multilayer-small.png]]
 
-- Registry (/Distributing/)
-  - image depo
-- Images (/Building/)
-  - template
-  - read-only
-- Conteneurs (/Runtime/) :
-  - based on an image
-  - has a state
+   - Conteneurs (/Runtime/) :
+     - based on an image
+     - has a state
+   - Images (/Building/)
+     - template
+     - read-only
+   - Registry (/Distributing/)
+     - image depo
 
 ** Show the code 😸
 
-#+BEGIN_SRC sh
+   #+BEGIN_SRC sh
 # Run an image…
 $ docker run -ti --rm ubuntu:14.04 /bin/bash
 # … or something more useful
@@ -218,7 +214,7 @@ $ docker run -d -v /tmp/.X11-unix:/tmp/.X11 \
              --name spotify vdemeester/spotify
 # What is running ?
 $ docker ps
-#+END_SRC
+   #+END_SRC
 
 * Docker Swarm 🐝
   :PROPERTIES:
@@ -226,13 +222,13 @@ $ docker ps
   :ASIDE:    right bottom
   :ARTICLE:  flexbox vleft auto-fadein
   :END:
-  An name horror story 🐒
+  Name confusion 🐒
 
 ** Small name confusion ?
 
    #+BEGIN_QUOTE
    A large number of insects, especially when in motion or (for bees)
-   migrating to a new colony.
+   migrating to a new colony. 🐝
    #+END_QUOTE
 
    Swarm is the /name/ of (almost) 2 projects @Docker:
@@ -260,7 +256,7 @@ $ docker ps
 
    Feedback aquired help understand limits and build better.
 
-** Swarm mode & =docker/swarmkit= (1/4)
+** Swarm mode (1/4)
 
    #+BEGIN_QUOTE
    A toolkit for orchestrating distributed systems at any scale. It
@@ -279,7 +275,7 @@ $ docker ps
    - Easy to setup
    * =docker/swarmkit= can work without =docker= (with different runtimes)
 
-** Swarm mode & =docker/swarmkit= (2/4)
+** Swarm mode (2/4)
 
    - *Declarative service model*, *Scaling*
    - *Desired state reconciliation*: constantly monitors the cluster
@@ -293,64 +289,37 @@ $ docker ps
    - *Rolling updates*: At rollout time you can apply service updates
      to nodes incrementally.
    - …
-** Swarm mode & =docker/swarmkit= (3/4)
+
+** Swarm mode (3/4)
 
    #+ATTR_HTML: :width 500px :style float: right;
    [[file:images/swarm-mode.svg]]
 
-   - *Cluter*: at least one node
+   - *Cluster*: at least one node
    - *Nodes*: a docker engine instance
-     - managers: maintain the cluster state
-
+     - managers: maintain the cluster state.
        one of them is elected as the *leader*
      - workers: received and execute task that manager assigned them
 
-** Swarm mode & =docker/swarmkit= (4/4)
+** Swarm mode (4/4)
 
    - *Services*: specified by its desired state, will create tasks
      - desired state
-     - replicas, global, …
    - *Tasks*:
      - attached to a /worker/
-     - created fro a service
+     - created from a service
      - corresponds to a specific container
      - immutable, doesn't move, doesn't update
+   - *Secrets*, *Networks*, *Node*, *Volumes*, …
    - *Stack* (client-side) : group of services (something like =docker-compose.yml=)
 
-* Demo 🌠
+* Demo 🌠 🏋
   :PROPERTIES:
   :SLIDE:    segue dark quote
   :ASIDE:    right bottom
   :ARTICLE:  flexbox vleft auto-fadein
   :END:
   Let's play 🎮
-
-** Setup 🏋
-
-   #+ATTR_HTML: :width 500px :style float: right
-   [[file:images/traefik.png]]
-
-   - Small cluster
-     - 3 managers
-     - 5 workers
-   - 1 cluster visualizer
-#   - Træfik on manager(s)
-   - Monitoring tools (elk, …)
-   - Lot's of non useful apps 👼
-     - and a few useful ones 👼
-
-
-** Let's play 🎮
-
-   - 🗹 Creation d'un cluster 🏋
-   - ☐ Initialisation du swarm cluster
-   - ☐ Validation que celà fonctionne
-   - ☐ Création de services
-   - ☐ Rolling upgrade
-   - ☐ Update the cluster
-   - ☐ Health monitoring
-   - ☐ /put your game here…/
-
 
 * Questions ? 🐳
   :PROPERTIES:
@@ -362,7 +331,7 @@ $ docker ps
   #+ATTR_HTML: :width 500px :style float: right; margin-right: -3em;
   [[file:images/animals-august2015.png]]
 
-  Thank You 🐸
+  Thank You 🦁
 
 
 * Behind the scene 🎮
@@ -418,7 +387,7 @@ $ docker ps
                             --advertise-addr $(docker-machine ip manager2) \
                             $(docker-machine ip manager1)"
      #+END_SRC
-     
+
 
 ** Under the hood: docker swarm init
 
@@ -459,15 +428,15 @@ $ docker ps
 
 ** IP address to advertise
 
-    - When running in Swarm mode, each node advertises its address to the others
-      (i.e. it tells them "you can contact me on 10.1.2.3:2377")
-    - If the node has only one IP address (other than 127.0.0.1), it is used automatically
-    - If the node has multiple IP addresses, you must specify which one to use
-      (Docker refuses to pick one randomly)
-    - You can specify an IP address or an interface name
-      (in the latter case, Docker will read the IP address of the interface and use it)
-    - You can also specify a port number
-      (otherwise, the default port 2377 will be used)
+   - When running in Swarm mode, each node advertises its address to the others
+     (i.e. it tells them "you can contact me on 10.1.2.3:2377")
+   - If the node has only one IP address (other than 127.0.0.1), it is used automatically
+   - If the node has multiple IP addresses, you must specify which one to use
+     (Docker refuses to pick one randomly)
+   - You can specify an IP address or an interface name
+     (in the latter case, Docker will read the IP address of the interface and use it)
+   - You can also specify a port number
+     (otherwise, the default port 2377 will be used)
 
 ** Join the cluster – gotchas
 
@@ -484,12 +453,12 @@ $ docker ps
 
 ** How many managers do we need?
 
-    - 2N+1 nodes can (and will) tolerate N failures
-      (you can have an even number of managers, but there is no point)
-    - 1 manager = no failure
-    - 3 managers = 1 failure
-    - 5 managers = 2 failures (or 1 failure during 1 maintenance)
-    - 7 managers and more = now you might be overdoing it a little bit
+   - 2N+1 nodes can (and will) tolerate N failures
+     (you can have an even number of managers, but there is no point)
+   - 1 manager = no failure
+   - 3 managers = 1 failure
+   - 5 managers = 2 failures (or 1 failure during 1 maintenance)
+   - 7 managers and more = now you might be overdoing it a little bit
 
 ** Running our first Swarm service
 
@@ -535,12 +504,12 @@ $ docker ps
 
 ** Tasks lifecycle
 
-    - If you are fast enough, you will be able to see multiple states:
-      - assigned (the task has been assigned to a specific node)
-      - preparing (right now, this mostly means "pulling the image")
-      - running
-    - When a task is terminated (stopped, killed...) it cannot be restarted
-      (A replacement task will be created)
+   - If you are fast enough, you will be able to see multiple states:
+     - assigned (the task has been assigned to a specific node)
+     - preparing (right now, this mostly means "pulling the image")
+     - running
+   - When a task is terminated (stopped, killed...) it cannot be restarted
+     (A replacement task will be created)
 
 ** Timeline of an upgrade
 
@@ -577,13 +546,13 @@ $ docker ps
 
 ** Securing overlay networks (1/2)
 
-    - By default, overlay networks are using plain VXLAN encapsulation
-      (~Ethernet over UDP, using SwarmKit's control plane for ARP resolution)
-    - Encryption can be enabled on a per-network basis
-      (It will use IPSEC encryption provided by the kernel, leveraging
-      hardware acceleration)
-    - This is only for the overlay driver
-      (Other drivers/plugins will use different mechanisms)
+   - By default, overlay networks are using plain VXLAN encapsulation
+     (~Ethernet over UDP, using SwarmKit's control plane for ARP resolution)
+   - Encryption can be enabled on a per-network basis
+     (It will use IPSEC encryption provided by the kernel, leveraging
+     hardware acceleration)
+   - This is only for the overlay driver
+     (Other drivers/plugins will use different mechanisms)
 
 
 

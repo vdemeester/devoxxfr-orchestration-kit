@@ -1,0 +1,20 @@
+version: '3.1'
+
+services:
+  front:
+    build: web
+    image: vdemeester/exquisite-web:v1
+    ports: ["80:80"]
+
+  back:
+    build: words-java
+    image: vdemeester/exquisite-words-java:v1
+    deploy:
+      resources:
+        limits:
+          memory: 64M
+        reservations:
+          memory: 64M
+
+  mongo:
+    image: mongo:3.3.8
