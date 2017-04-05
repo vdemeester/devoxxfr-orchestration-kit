@@ -17,7 +17,7 @@ Have docker-compose installed locally and with the correct version.
    … and init the swarm on manager1
 
    #+BEGIN_SRC bash
-     docker-machine ssh vdedemo-manager1 docker swarm init --listen-addr $(docker-machine ip vdedemo-manager1) --advertise-addr $(docker-machine ip vdedemo-manager1)
+     docker-machine ssh vdedemo1 docker swarm init --listen-addr $(docker-machine ip vdedemo1) --advertise-addr $(docker-machine ip vdedemo1)
    #+END_SRC
 
 ** Join as manager or worker
@@ -25,34 +25,34 @@ Have docker-compose installed locally and with the correct version.
    List tokens (to have them later)
 
    #+BEGIN_SRC bash
-docker-machine ssh vdedemo-manager1 docker swarm join-token worker
-docker-machine ssh vdedemo-manager1 docker swarm join-token manager
+docker-machine ssh vdedemo1 docker swarm join-token worker
+docker-machine ssh vdedemo1 docker swarm join-token manager
    #+END_SRC
 
    And join the swarm using these tokens.
 
    #+BEGIN_SRC bash
-join-swarm vdedemo-manager2 ${MANAGER_TOKEN} ${DAEMON_IP}
-join-swarm vdedemo-manager3 ${WORKER_TOKEN} ${DAEMON_IP}
-join-swarm vdedemo-worker1 ${WORKER_TOKEN} ${DAEMON_IP}
+join-swarm vdedemo2 ${MANAGER_TOKEN} ${DAEMON_IP}
+join-swarm vdedemo3 ${WORKER_TOKEN} ${DAEMON_IP}
+join-swarm vdedemo4 ${WORKER_TOKEN} ${DAEMON_IP}
 # …
    #+END_SRC
 
 ** List nodes
 
    #+BEGIN_SRC bash
-docker-machine ssh vdedemo-manager1 docker node ls
-docker-machine ssh vdedemo-manager2 docker node ls
-docker-machine ssh vdedemo-worker1 docker node ls
+docker-machine ssh vdedemo1 docker node ls
+docker-machine ssh vdedemo2 docker node ls
+docker-machine ssh vdedemo1 docker node ls
    #+END_SRC
 
 
 ** Update some nodes
 
    #+BEGIN_SRC bash
-docker node update --role=manager vdedemo-manager3
-docker node update --label-add foo=bar vdedemo-worker1
-docker node update --label-add foo=baz vdedemo-worker2
+docker node update --role=manager vdedemo3
+docker node update --label-add foo=bar vdedemo4
+docker node update --label-add foo=baz vdedemo5
    #+END_SRC
 
 
