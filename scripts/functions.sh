@@ -6,8 +6,7 @@ join-swarm() {
     local leader=$1
     echo "> $name joining the swarm"
     docker-machine ssh ${name} \
-                   "docker swarm join \
-                        --token ${token} \
+                   "docker swarm join --token ${token} \
                         --listen-addr $(docker-machine ip $name) \
                         --advertise-addr $(docker-machine ip $name) \
                         ${leader}"
