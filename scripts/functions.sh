@@ -16,6 +16,10 @@ ips() {
     docker-machine ip $(docker-machine ls -q)
 }
 
+machines() {
+    docker-machine ls --format 'table {{.Name}} {{.DriverName}} {{.URL}}'
+}
+
 visualizer() {
     docker-machine ssh $1 \
               "docker service create \
